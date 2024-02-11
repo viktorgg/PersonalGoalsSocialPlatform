@@ -6,7 +6,7 @@ import 'dart:convert';
 
 class DatabaseServices {
 
-  static Future<Task> addTask(String title, String description) async {
+  static Future<Task> createTask(String title, String description) async {
     Map data = {
       "title": title,
       "description": description
