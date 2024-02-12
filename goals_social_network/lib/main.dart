@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:goals_social_network/task_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:goals_social_network/models/tasks_data.dart';
 import 'package:goals_social_network/services/database_services.dart';
@@ -15,28 +16,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.purpleAccent),
-        useMaterial3: true,
+    return ChangeNotifierProvider<TasksData>(
+      create: (context) => TasksData(),
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: MyHomePage(title: 'Goals social platform'),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -70,32 +55,54 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getTasks();
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return tasks == null?
-      const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator()
-        )
-      )
-        :Scaffold(
+    return tasks == null
+        ? const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    )
+        : Scaffold(
       appBar: AppBar(
-        title: Text( 'Todo tasks'
-         // 'Todo Tasks (${Provider.of<TasksData>(context).tasks.length}))'
+        title: Text(
+          'Todo Tasks (${Provider.of<TasksData>(context).tasks.length})',
         ),
         centerTitle: true,
-        backgroundColor: Colors.pinkAccent,
+        backgroundColor: Colors.green,
+      ),
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Consumer<TasksData>(
+          builder: (context, tasksData, child) {
+            return ListView.builder(
+                itemCount: tasksData.tasks.length,
+                itemBuilder: (context, index) {
+                  Task task = tasksData.tasks[index];
+                  return TaskTile(
+                    task: task,
+                    tasksData: tasksData,
+                  );
+                });
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.green,
+        child: const Icon(
+          Icons.add,
+        ),
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return const MyHomePage(title: 'new');
+              });
+        },
       ),
     );
   }

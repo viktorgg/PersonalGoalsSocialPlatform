@@ -20,11 +20,16 @@ public class TaskEntity {
     @Column(name = "description")
     private String description;
 
+    @Nonnull
+    @Column(name = "done")
+    private Boolean done;
+
     public TaskEntity() {}
 
-    public TaskEntity(@Nonnull String title, @Nonnull String description) {
+    public TaskEntity(@Nonnull String title, @Nonnull String description, @Nonnull Boolean done) {
         this.title = title;
         this.description = description;
+        this.done = done;
     }
 
     public Long getId() {
@@ -49,5 +54,14 @@ public class TaskEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Nonnull
+    public Boolean getDone() {
+        return done;
+    }
+
+    public void setDone(@Nonnull Boolean done) {
+        this.done = done;
     }
 }

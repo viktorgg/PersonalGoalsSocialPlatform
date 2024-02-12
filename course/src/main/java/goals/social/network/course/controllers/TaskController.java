@@ -33,6 +33,7 @@ public class TaskController {
             TaskEntity taskToUpdate = taskRepository.getReferenceById(id);
             taskToUpdate.setTitle(taskEntity.getTitle());
             taskToUpdate.setDescription(taskEntity.getDescription());
+            taskToUpdate.setDone(taskEntity.getDone());
             taskRepository.save(taskToUpdate);
             return new ResponseEntity<>("Task is updated", HttpStatus.OK);
         }
@@ -43,7 +44,6 @@ public class TaskController {
     public ResponseEntity<?> deleteTask(@PathVariable Long id) {
         boolean exists = taskRepository.existsById(id);
         if (exists) {
-            TaskEntity taskToUpdate = taskRepository.getReferenceById(id);
             taskRepository.deleteById(id);
             return new ResponseEntity<>("Task with ID %s is deleted".formatted(id), HttpStatus.OK);
         }

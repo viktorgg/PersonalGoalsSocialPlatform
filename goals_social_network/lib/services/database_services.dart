@@ -6,10 +6,11 @@ import 'dart:convert';
 
 class DatabaseServices {
 
-  static Future<Task> createTask(String title, String description) async {
+  static Future<Task> createTask(String title, String description, bool done) async {
     Map data = {
       "title": title,
-      "description": description
+      "description": description,
+      "done": done,
     };
     var body = json.encode(data);
     var url = Uri.parse('$baseURL/create');
@@ -32,6 +33,21 @@ class DatabaseServices {
       tasks.add(Task.fromMap(element));
     }
     return tasks;
+  }
+
+  static Future<http.Response> updateTask(Task task) async {
+    var id = task.id;
+    var url = Uri.parse('$baseURL/update/$id');
+    http.Response response = await http.put(url, headers: headers, body: json.encode(task.toMap()));
+    print(response.body);
+    return response;
+  }
+
+  static Future<http.Response> deleteTask(int id) async {
+    var url = Uri.parse('$baseURL/$id');
+    http.Response response = await http.delete(url, headers: headers);
+    print(response.body);
+    return response;
   }
 }
 
