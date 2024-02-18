@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:goals_social_network/screens/create_goal_screen.dart';
 import 'package:goals_social_network/task_tile.dart';
 import 'package:provider/provider.dart';
-import 'package:goals_social_network/models/tasks_data.dart';
+import 'package:goals_social_network/models/goals_data.dart';
 import 'package:goals_social_network/services/database_services.dart';
 
-import 'models/task.dart';
+import 'models/goal.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,8 +17,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<TasksData>(
-      create: (context) => TasksData(),
+    return ChangeNotifierProvider<GoalsData>(
+      create: (context) => GoalsData(),
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: MyHomePage(title: 'Goals social platform'),
@@ -45,23 +46,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Task>? tasks;
+  List<Goal>? goals;
 
-  getTasks() async {
-    tasks = await DatabaseServices.getTasks();
-    Provider.of<TasksData>(context, listen: false).tasks = tasks!;
+  getGoals() async {
+    goals = await DatabaseServices.getGoals();
+    Provider.of<GoalsData>(context, listen: false).goals = goals!;
     setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    getTasks();
+    getGoals();
   }
 
   @override
   Widget build(BuildContext context) {
-    return tasks == null
+    return goals == null
         ? const Scaffold(
       body: Center(
         child: CircularProgressIndicator(),
@@ -70,19 +71,19 @@ class _MyHomePageState extends State<MyHomePage> {
         : Scaffold(
       appBar: AppBar(
         title: Text(
-          'Todo Tasks (${Provider.of<TasksData>(context).tasks.length})',
+          'My goals list (${Provider.of<GoalsData>(context).goals.length})',
         ),
         centerTitle: true,
         backgroundColor: Colors.green,
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Consumer<TasksData>(
+        child: Consumer<GoalsData>(
           builder: (context, tasksData, child) {
             return ListView.builder(
-                itemCount: tasksData.tasks.length,
+                itemCount: tasksData.goals.length,
                 itemBuilder: (context, index) {
-                  Task task = tasksData.tasks[index];
+                  Goal task = tasksData.goals[index];
                   return TaskTile(
                     task: task,
                     tasksData: tasksData,
@@ -100,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
           showModalBottomSheet(
               context: context,
               builder: (context) {
-                return const MyHomePage(title: 'new');
+                return const CreateGoalScreen();
               });
         },
       ),

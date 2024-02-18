@@ -1,16 +1,16 @@
 import 'package:goals_social_network/services/globals.dart';
 import 'package:http/http.dart' as http;
-import 'package:goals_social_network/models/task.dart';
+import 'package:goals_social_network/models/goal.dart';
 
 import 'dart:convert';
 
 class DatabaseServices {
 
-  static Future<Task> createTask(String title, String description, bool done) async {
+  static Future<Goal> createGoal(String title, String description) async {
     Map data = {
       "title": title,
       "description": description,
-      "done": done,
+      "done": false
     };
     var body = json.encode(data);
     var url = Uri.parse('$baseURL/create');
@@ -18,24 +18,24 @@ class DatabaseServices {
     http.Response response = await http.post(url, headers: headers, body: body);
     print(response.body);
     Map responseMap = jsonDecode(response.body);
-    Task task = Task.fromMap(responseMap);
+    Goal goal = Goal.fromMap(responseMap);
 
-    return task;
+    return goal;
   }
 
-  static Future<List<Task>> getTasks() async {
+  static Future<List<Goal>> getGoals() async {
     var url = Uri.parse(baseURL);
     http.Response response = await http.get(url, headers: headers);
     print(response);
     List responseTasks = jsonDecode(response.body);
-    List<Task> tasks = [];
+    List<Goal> goals = [];
     for (var element in responseTasks) {
-      tasks.add(Task.fromMap(element));
+      goals.add(Goal.fromMap(element));
     }
-    return tasks;
+    return goals;
   }
 
-  static Future<http.Response> updateTask(Task task) async {
+  static Future<http.Response> updateGoal(Goal task) async {
     var id = task.id;
     var url = Uri.parse('$baseURL/update/$id');
     http.Response response = await http.put(url, headers: headers, body: json.encode(task.toMap()));
@@ -43,7 +43,7 @@ class DatabaseServices {
     return response;
   }
 
-  static Future<http.Response> deleteTask(int id) async {
+  static Future<http.Response> deleteGoal(int id) async {
     var url = Uri.parse('$baseURL/$id');
     http.Response response = await http.delete(url, headers: headers);
     print(response.body);

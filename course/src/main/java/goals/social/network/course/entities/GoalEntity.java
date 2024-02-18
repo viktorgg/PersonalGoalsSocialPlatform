@@ -3,33 +3,30 @@ package goals.social.network.course.entities;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 
+import java.util.Map;
+
 @Entity
-@Table(name = "tasks")
-public class TaskEntity {
+@Table(name = "goals")
+public class GoalEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
-    @Nonnull
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Nonnull
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Nonnull
-    @Column(name = "done")
+    @Column(name = "done", nullable = false)
     private Boolean done;
 
-    public TaskEntity() {}
+    public GoalEntity() {}
 
-    public TaskEntity(@Nonnull String title, @Nonnull String description, @Nonnull Boolean done) {
-        this.title = title;
-        this.description = description;
-        this.done = done;
+    public Map<String, Object> toMap() {
+        return Map.of("id", id, "title", title, "description", description, "done", done);
     }
 
     public Long getId() {
@@ -61,7 +58,7 @@ public class TaskEntity {
         return done;
     }
 
-    public void setDone(@Nonnull Boolean done) {
+    public void setDone(Boolean done) {
         this.done = done;
     }
 }
