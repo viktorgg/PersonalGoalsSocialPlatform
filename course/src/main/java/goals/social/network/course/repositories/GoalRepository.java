@@ -1,7 +1,6 @@
 package goals.social.network.course.repositories;
 
-import goals.social.network.course.entities.GoalEntity;
+import goals.social.network.course.models.Goal;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface GoalRepository extends JpaRepository<GoalEntity, Long> {
-}
+public interface GoalRepository extends JpaRepository<Goal, Long> {}

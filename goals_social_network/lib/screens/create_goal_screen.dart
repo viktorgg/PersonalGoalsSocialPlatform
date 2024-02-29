@@ -19,47 +19,62 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: ListView(
-        children: [
-          const Text(
-            'Create new goal',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 30,
-              color: Colors.green,
+    return ListView.separated(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        physics: const BouncingScrollPhysics(),
+        itemCount: 5,
+        itemBuilder: (context, index) => Container(
+          padding: const EdgeInsets.all(12.0),
+            child: ListView(
+              children: [
+                const Text(
+                  'Create new goal',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 30,
+                    color: Colors.green,
+                  ),
+                ),
+                TextField(
+                  decoration: const InputDecoration(
+                      hintText: "Enter the title of your goal"),
+                  autofocus: true,
+                  onChanged: (val) {
+                    goalTitle = val;
+                  },
+                ),
+                TextField(
+                  decoration: const InputDecoration(
+                      hintText: "Enter the description of your goal"),
+                  autofocus: true,
+                  onChanged: (val) {
+                    goalDescription = val;
+                  },
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child:  TextButton(
+                    onPressed: () {
+                      if (goalTitle.isNotEmpty) {
+                        Provider.of<GoalsData>(context, listen: false)
+                            .createGoal(goalTitle, goalDescription);
+                        Navigator.pop(context);
+                      }
+                    },
+                    style: TextButton.styleFrom(backgroundColor: Colors.green),
+                    child: const Text(
+                      'Add',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          TextField(
-            autofocus: true,
-            onChanged: (val) {
-              goalTitle = val;
-            },
-          ),
-          TextField(
-            autofocus: true,
-            onChanged: (val) {
-              goalDescription = val;
-            },
-          ),
-          const SizedBox(height: 10),
-          TextButton(
-            onPressed: () {
-              if (goalTitle.isNotEmpty) {
-                Provider.of<GoalsData>(context, listen: false)
-                    .createGoal(goalTitle, goalDescription);
-                Navigator.pop(context);
-              }
-            },
-            style: TextButton.styleFrom(backgroundColor: Colors.green),
-            child: const Text(
-              'Add',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
-      ),
+        separatorBuilder: (context, index) => const SizedBox(
+          height: 10,
+        )
     );
   }
 }

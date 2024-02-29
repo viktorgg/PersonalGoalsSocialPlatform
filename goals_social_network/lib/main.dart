@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:goals_social_network/screens/create_goal_screen.dart';
-import 'package:goals_social_network/task_tile.dart';
+import 'package:goals_social_network/goal_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:goals_social_network/models/goals_data.dart';
 import 'package:goals_social_network/services/database_services.dart';
@@ -84,9 +84,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemCount: tasksData.goals.length,
                 itemBuilder: (context, index) {
                   Goal task = tasksData.goals[index];
-                  return TaskTile(
-                    task: task,
-                    tasksData: tasksData,
+                  return GoalTile(
+                    goal: task,
+                    goalsData: tasksData,
                   );
                 });
           },

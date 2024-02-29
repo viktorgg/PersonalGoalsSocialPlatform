@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'models/goal.dart';
 import 'models/goals_data.dart';
 
-class TaskTile extends StatelessWidget {
-  final Goal task;
-  final GoalsData tasksData;
+class GoalTile extends StatelessWidget {
+  final Goal goal;
+  final GoalsData goalsData;
 
-  const TaskTile({Key? key, required this.task, required this.tasksData})
+  const GoalTile({Key? key, required this.goal, required this.goalsData})
       : super(key: key);
 
   @override
@@ -16,25 +16,25 @@ class TaskTile extends StatelessWidget {
       child: ListTile(
         leading: Checkbox(
           activeColor: Colors.green,
-          value: task.done,
+          value: goal.done,
           onChanged: (checkbox) {
-            tasksData.updateGoal(task);
+            goalsData.updateGoal(goal);
           },
         ),
         title: Text(
-          task.title,
+          goal.title,
           style: TextStyle(
             decoration:
-            task.done ? TextDecoration.lineThrough : TextDecoration.none,
+            goal.done ? TextDecoration.lineThrough : TextDecoration.none,
           ),
         ),
         subtitle: Text(
-          task.description,
+          goal.description,
         ),
         trailing: IconButton(
           icon: const Icon(Icons.clear),
           onPressed: () {
-            tasksData.deleteGoal(task);
+            goalsData.deleteGoal(goal);
           },
         ),
       ),
