@@ -9,6 +9,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -21,22 +23,24 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public void signUp(User user) {
+    public String signUp(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);
+        return jwtService.generateToken(user);
     }
 
-    public String signIn(SignInRequest request) {
+    public Map<String, Object> signIn(SignInRequest request) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         } catch (BadCredentialsException ex) {
-            return "Invalid email or password";
+            return Map.of("message", "Invalid email or password");
         }
         Optional<User> foundUser = userRepository.findByEmail(request.getEmail());
-        if (foundUser.isEmpty()) {
-            return "Invalid email";
-        }
-        return jwtService.generateToken(foundUser.get());
+        User user = foundUser.get();
+        Map<String, Object> userMap = user.toMap();
+        Map<String, Object> responseMap = new HashMap<>(userMap);
+        responseMap.put("token", jwtService.generateToken(user));
+        return responseMap;
     }
 }

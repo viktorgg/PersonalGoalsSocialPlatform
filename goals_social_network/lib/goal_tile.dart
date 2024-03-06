@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'models/goal.dart';
-import 'models/goals_data.dart';
+import 'providers/goals_provider.dart';
 
 class GoalTile extends StatelessWidget {
   final Goal goal;
-  final GoalsData goalsData;
+  final GoalsProvider goalsData;
 
   const GoalTile({Key? key, required this.goal, required this.goalsData})
       : super(key: key);
@@ -15,7 +15,7 @@ class GoalTile extends StatelessWidget {
     return Card(
       child: ListTile(
         leading: Checkbox(
-          activeColor: Colors.green,
+          activeColor: const Color.fromRGBO(50, 62, 72, 1.0),
           value: goal.done,
           onChanged: (checkbox) {
             goalsData.updateGoal(goal);

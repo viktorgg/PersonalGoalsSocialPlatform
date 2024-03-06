@@ -9,10 +9,12 @@ import goals.social.network.course.services.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -26,7 +28,7 @@ public class AuthController {
     public ResponseEntity<?> signUp(@RequestBody SignUpRequest request) {
         String requestEmail = request.getEmail();
         if (userRepository.findByEmail(requestEmail).isPresent()) {
-            return new ResponseEntity<>("User with email %s is already registered".formatted(requestEmail), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(Map.of("message", "User with email %s is already registered".formatted(requestEmail)), HttpStatus.FORBIDDEN);
         }
         User user = User
                 .builder()
@@ -36,16 +38,19 @@ public class AuthController {
                 .password(request.getPassword())
                 .role(Role.ROLE_USER)
                 .build();
-        authenticationService.signUp(user);
-        return new ResponseEntity<>("User is registered", HttpStatus.OK);
+        String token = authenticationService.signUp(user);
+        Map<String, Object> userMap = user.toMap();
+        Map<String, Object> responseMap = new HashMap<>(userMap);
+        responseMap.put("token", token);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@RequestBody SignInRequest request) {
-        String message = authenticationService.signIn(request);
-        if (message.contains("Invalid")) {
-            return new ResponseEntity<>(Map.of("message", message), HttpStatus.FORBIDDEN);
+        Map<String, Object> responseMap = authenticationService.signIn(request);
+        if (!responseMap.containsKey("token")) {
+            return new ResponseEntity<>(responseMap, HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity<>(Map.of("message", message), HttpStatus.OK);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 }

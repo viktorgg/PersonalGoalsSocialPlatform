@@ -6,8 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Builder
@@ -72,4 +71,22 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public Map<String, Object> toMap() {
+        return Map.of(
+                "id", id,
+                "firstName", firstName,
+                "lastName", lastName,
+                "email", email
+        );
+    }
+
+    @ManyToMany(mappedBy = "following", cascade = CascadeType.ALL)
+    private Set<User> followers = new HashSet<>();
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="users_rel",
+            joinColumns={@JoinColumn(name="follower_id")},
+            inverseJoinColumns={@JoinColumn(name="user_id")})
+    private Set<User> following = new HashSet<>();
 }

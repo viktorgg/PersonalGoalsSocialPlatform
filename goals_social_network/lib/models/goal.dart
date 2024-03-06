@@ -11,8 +11,13 @@ class Goal {
     required this.done,
   });
 
-  factory Goal.fromMap(Map taskMap) {
-    return Goal(id: taskMap['id'], title: taskMap['title'], description: taskMap['description'],  done: taskMap['done']);
+  factory Goal.fromMap(Map goalMap) {
+    return Goal(
+        id: goalMap['id'],
+        title: goalMap['title'],
+        description: goalMap['description'],
+        done: goalMap['done']
+    );
   }
 
   Map<String, dynamic> toMap() {

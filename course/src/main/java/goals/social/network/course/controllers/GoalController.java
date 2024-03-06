@@ -24,13 +24,13 @@ public class GoalController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createTask(@RequestBody Goal goal) {
+    public ResponseEntity<?> createGoal(@RequestBody Goal goal) {
         goalRepository.save(goal);
         return new ResponseEntity<>(goal.toMap(), HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateTask(@PathVariable Long id, @RequestBody Goal goal) {
+    public ResponseEntity<?> updateGoal(@PathVariable Long id, @RequestBody Goal goal) {
         boolean exists = goalRepository.existsById(id);
         if (exists) {
             Goal goalToUpdate = goalRepository.getReferenceById(id);
@@ -44,7 +44,7 @@ public class GoalController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTask(@PathVariable Long id) {
+    public ResponseEntity<?> deleteGoal(@PathVariable Long id) {
         boolean exists = goalRepository.existsById(id);
         if (exists) {
             goalRepository.deleteById(id);
