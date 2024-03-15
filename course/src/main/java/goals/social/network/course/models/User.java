@@ -2,6 +2,8 @@ package goals.social.network.course.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +23,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(nullable = false)
     String firstName;
 
     @Column(nullable = false)
@@ -81,12 +83,11 @@ public class User implements UserDetails {
         );
     }
 
-    @ManyToMany(mappedBy = "following", cascade = CascadeType.ALL)
-    private Set<User> followers = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @Fetch(FetchMode.SUBSELECT)
+    private Set<UserRelations> followers = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="users_rel",
-            joinColumns={@JoinColumn(name="follower_id")},
-            inverseJoinColumns={@JoinColumn(name="user_id")})
-    private Set<User> following = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "follower")
+    @Fetch(FetchMode.SUBSELECT)
+    private Set<UserRelations> following = new HashSet<>();
 }
