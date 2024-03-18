@@ -16,7 +16,7 @@ class Goal {
         id: goalMap['id'],
         title: goalMap['title'],
         description: goalMap['description'],
-        done: goalMap['done']
+        done: goalMap['done'],
     );
   }
 

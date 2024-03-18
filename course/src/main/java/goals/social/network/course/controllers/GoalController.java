@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/goals")
 @RequiredArgsConstructor
+@RequestMapping(path = "/goals")
 public class GoalController {
 
     @Autowired
@@ -40,7 +40,7 @@ public class GoalController {
             goalRepository.save(goalToUpdate);
             return new ResponseEntity<>(goalToUpdate.toMap(), HttpStatus.OK);
         }
-        return new ResponseEntity<>("Task with ID %s is not found".formatted(id), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Goal with ID %s is not found".formatted(id), HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/{id}")
@@ -48,8 +48,8 @@ public class GoalController {
         boolean exists = goalRepository.existsById(id);
         if (exists) {
             goalRepository.deleteById(id);
-            return new ResponseEntity<>("Task with ID %s is deleted".formatted(id), HttpStatus.OK);
+            return new ResponseEntity<>("Goal with ID %s is deleted".formatted(id), HttpStatus.OK);
         }
-        return new ResponseEntity<>("Task with ID %s is not found".formatted(id), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Goal with ID %s is not found".formatted(id), HttpStatus.BAD_REQUEST);
     }
 }

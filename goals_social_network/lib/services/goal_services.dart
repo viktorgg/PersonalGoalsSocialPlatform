@@ -7,13 +7,17 @@ import 'package:goals_social_network/models/goal.dart';
 
 import 'dart:convert';
 
+import '../models/user.dart';
+
 class GoalServices {
 
   static Future<Goal> createGoal(String title, String description) async {
+    User currentUser = await UserServices.getUser();
     Map data = {
       "title": title,
       "description": description,
-      "done": false
+      "done": false,
+      "userId": currentUser.userId,
     };
 
     var token = await UserServices.getToken();
@@ -34,23 +38,26 @@ class GoalServices {
   }
 
   static Future<List<Goal>> getGoals() async {
-    var url = Uri.parse(goalsURL);
     var token = await UserServices.getToken();
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: 'Bearer $token',
     };
     headers.addAll(header);
-    print(headers);
+
+    User currentUser = await UserServices.getUser();
+    int currentUserId = currentUser.userId;
+    var url =  Uri.parse('$goalsURL/$currentUserId');
     Response response = await get(
         url,
         headers: headers
     );
-    print(response);
+    print(url);
     List responseTasks = jsonDecode(response.body);
     List<Goal> goals = [];
     for (var element in responseTasks) {
       goals.add(Goal.fromMap(element));
     }
+
     return goals;
   }
 

@@ -4,34 +4,45 @@ import goals.social.network.course.models.User;
 import goals.social.network.course.models.UserRelations;
 import goals.social.network.course.repositories.UserRepository;
 import goals.social.network.course.repositories.UserRelationsRepository;
+import goals.social.network.course.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
-public class FollowersController {
+@RequestMapping(path = "/user")
+public class UserController {
 
     private final UserRepository userRepository;
     private final UserRelationsRepository relationsRepository;
 
-    @GetMapping("/followers")
-    public ResponseEntity<?> getUserRel(@RequestBody Map<String, String> userEmail) {
-        Optional<User> user = userRepository.findByEmail(userEmail.get("email"));
-        Optional<User> user2 = userRepository.findByEmail(userEmail.get("email2"));
-        relationsRepository.save(new UserRelations(user.get(), user2.get()));
+    private final UserService userService;
+
+    @GetMapping("/rel/{userId}")
+    public ResponseEntity<?> getUserRelations(@PathVariable Long userId) {
+        Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
-            user = userRepository.findByEmail(userEmail.get("email2"));
-            Set<UserRelations> following = user.get().getFollowing();
-            Set<UserRelations> followers = user.get().getFollowers();
+            List<User> followers = userService.getUserFollowers(user.get());
+            List<User> following = userService.getUserFollowing(user.get());
             return new ResponseEntity<>(Map.of("following", following, "followers", followers), HttpStatus.OK);
         }
-        return new ResponseEntity<>("Task with ID %s is not found".formatted(userEmail), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("User with ID %s is not found".formatted(userId), HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/goals/{userId}")
+    public ResponseEntity<?> getUserGroups(@PathVariable Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            return new ResponseEntity<>(user.get().getGoals(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("User with ID %s is not found".formatted(userId), HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/followers/create")

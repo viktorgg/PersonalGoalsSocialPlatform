@@ -90,4 +90,7 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "follower")
     @Fetch(FetchMode.SUBSELECT)
     private Set<UserRelations> following = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Goal> goals;
 }

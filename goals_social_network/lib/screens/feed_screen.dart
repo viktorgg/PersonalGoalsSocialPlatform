@@ -40,7 +40,7 @@ class _FeedScreenState extends State<FeedScreen> {
         : Scaffold(
       appBar: AppBar(
         title: Text(
-          'Goals of my friends (${Provider.of<GoalsProvider>(context).goals.length})',
+          'My Goals(${Provider.of<GoalsProvider>(context).goals.length})',
           style: const TextStyle(
             color: Colors.white
         )),
