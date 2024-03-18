@@ -20,6 +20,8 @@ class GoalServices {
       "userId": currentUser.userId,
     };
 
+    print(data);
+
     var token = await UserServices.getToken();
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -46,7 +48,7 @@ class GoalServices {
 
     User currentUser = await UserServices.getUser();
     int currentUserId = currentUser.userId;
-    var url =  Uri.parse('$goalsURL/$currentUserId');
+    var url =  Uri.parse('$userGoalsURL/$currentUserId');
     Response response = await get(
         url,
         headers: headers

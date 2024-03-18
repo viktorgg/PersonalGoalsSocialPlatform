@@ -3,15 +3,11 @@ import 'package:goals_social_network/services/goal_services.dart';
 import 'package:goals_social_network/models/goal.dart';
 
 class GoalsProvider extends ChangeNotifier {
-  final List<Goal> _goals = [];
-
-  List<Goal> get goals => _goals;
-
-  set goals(goals) => _goals;
+  List<Goal> goals = [];
 
   void createGoal(String title, String description) async {
     Goal goal = await GoalServices.createGoal(title, description);
-    _goals.add(goal);
+    goals.add(goal);
     notifyListeners();
   }
 
@@ -22,7 +18,7 @@ class GoalsProvider extends ChangeNotifier {
   }
 
   void deleteGoal(Goal goal) {
-    _goals.remove(goal);
+    goals.remove(goal);
     GoalServices.deleteGoal(goal.id);
     notifyListeners();
   }
