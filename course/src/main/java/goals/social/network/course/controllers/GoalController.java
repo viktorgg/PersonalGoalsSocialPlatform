@@ -30,8 +30,11 @@ public class GoalController {
     @PostMapping("/create")
     public ResponseEntity<?> createGoal(@RequestBody Map<String, Object> payload) {
         int userId = (int) payload.get("userId");
-        Optional<User> user = userRepository.findById((long) userId);
-        Goal goal = new Goal((String) payload.get("title"), (String) payload.get("description"), (Boolean) payload.get("done"), user.get());
+        User user = userRepository.findById((long) userId).get();
+        Goal goal = new Goal((String) payload.get("title"),
+                            (String) payload.get("description"),
+                            (Boolean) payload.get("done"),
+                            user);
         goalRepository.save(goal);
         return new ResponseEntity<>(goal.toMap(), HttpStatus.OK);
     }
@@ -41,7 +44,6 @@ public class GoalController {
         boolean exists = goalRepository.existsById(id);
         if (exists) {
             Goal goalToUpdate = goalRepository.getReferenceById(id);
-            System.out.println(goalToUpdate.toMap());
             goalToUpdate.setTitle(goal.getTitle());
             goalToUpdate.setDescription(goal.getDescription());
             goalToUpdate.setDone(goal.getDone());

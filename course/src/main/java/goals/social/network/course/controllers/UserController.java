@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +24,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/rel/{userId}")
+    @GetMapping("{userId}/rel")
     public ResponseEntity<?> getUserRelations(@PathVariable Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
@@ -36,7 +35,7 @@ public class UserController {
         return new ResponseEntity<>("User with ID %s is not found".formatted(userId), HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/goals/{userId}")
+    @GetMapping("{userId}/goals")
     public ResponseEntity<?> getUserGroups(@PathVariable Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
@@ -45,15 +44,15 @@ public class UserController {
         return new ResponseEntity<>("User with ID %s is not found".formatted(userId), HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/followers/create")
-    public ResponseEntity<?> createUserRel(@RequestBody Map<String, String> userEmails) {
-//        UsersRelations obj = new UsersRelations();
-//        User user1 = userRepository.findByEmail(userEmails.get("id1")).get();
-//        User user2 = userRepository.findByEmail(userEmails.get("id2")).get();
-//        obj.setFollower(user1);
-//        obj.setFollowed(user2);
-//        relationsRepository.save(obj);
-//        return new ResponseEntity<>(obj, HttpStatus.OK);
-        return null;
+    @PostMapping("{userIdFrom}/follow/{userIdTo}")
+    public ResponseEntity<?> createUserRel(@PathVariable Long userIdFrom, @PathVariable Long userIdTo) {
+        Optional<User> userFrom = userRepository.findById(userIdFrom);
+        Optional<User> userTo = userRepository.findById(userIdTo);
+        if (userFrom.isPresent() && userTo.isPresent()) {
+            UserRelations obj = new UserRelations(userTo.get(), userFrom.get());
+            relationsRepository.save(obj);
+            return new ResponseEntity<>("User %s follows user %s".formatted(userIdFrom, userIdTo), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Users not found", HttpStatus.BAD_REQUEST);
     }
 }

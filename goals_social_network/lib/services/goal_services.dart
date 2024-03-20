@@ -48,15 +48,15 @@ class GoalServices {
 
     User currentUser = await UserServices.getUser();
     int currentUserId = currentUser.userId;
-    var url =  Uri.parse('$userGoalsURL/$currentUserId');
+    var url =  Uri.parse('$userURL/$currentUserId/goals');
     Response response = await get(
         url,
         headers: headers
     );
     print(url);
-    List responseTasks = jsonDecode(response.body);
+    List responseGoals = jsonDecode(response.body);
     List<Goal> goals = [];
-    for (var element in responseTasks) {
+    for (var element in responseGoals) {
       goals.add(Goal.fromMap(element));
     }
 
