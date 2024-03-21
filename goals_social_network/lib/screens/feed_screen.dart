@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:goals_social_network/goal_tile.dart';
-import 'package:goals_social_network/screens/view_friends.dart';
+import 'package:goals_social_network/screens/goal_tile.dart';
+import 'package:goals_social_network/screens/view_friends_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../models/goal.dart';
@@ -38,7 +38,8 @@ class _FeedScreenState extends State<FeedScreen> {
       ),
     )
     : Scaffold(
-        drawer: const Drawer(child: ViewFriendsScreen()),
+        drawer: const Drawer(
+            child: ViewFriendsScreen()),
         appBar: AppBar(
           title: Text(
             'My Goals(${Provider.of<GoalsProvider>(context).goals.length})',
@@ -47,6 +48,7 @@ class _FeedScreenState extends State<FeedScreen> {
           )),
           centerTitle: true,
           backgroundColor: const Color.fromRGBO(50, 62, 72, 1.0),
+          iconTheme: const IconThemeData(color: Colors.white),
         ),
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

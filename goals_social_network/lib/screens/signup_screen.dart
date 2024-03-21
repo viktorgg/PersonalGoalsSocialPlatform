@@ -101,7 +101,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           if (response.containsKey("data")) {
             User user = response['data'];
             Provider.of<UserProvider>(context, listen: false).setUser(user);
-            Navigator.pushReplacementNamed(context, '/goals');
+            Navigator.pushReplacementNamed(context, '/feed');
           } else {
             Flushbar(
               title: "Registration failed!",

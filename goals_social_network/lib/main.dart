@@ -3,11 +3,13 @@ import 'package:goals_social_network/providers/auth_provider.dart';
 import 'package:goals_social_network/providers/goals_provider.dart';
 import 'package:goals_social_network/providers/user_provider.dart';
 import 'package:goals_social_network/screens/feed_screen.dart';
+import 'package:goals_social_network/screens/friend_goals_screen.dart';
 import 'package:goals_social_network/screens/signin_screen.dart';
 import 'package:goals_social_network/screens/signup_screen.dart';
 import 'package:goals_social_network/services/user_services.dart';
 import 'package:provider/provider.dart';
 
+import 'models/friend.dart';
 import 'models/user.dart';
 
 void main() {
@@ -54,9 +56,13 @@ class MyApp extends StatelessWidget {
                 }
               }),
           routes: {
-            '/goals': (context) => const FeedScreen(),
+            '/feed': (context) => const FeedScreen(),
             '/signin': (context) => const SignInScreen(),
             '/signup': (context) => const SignUpScreen(),
+            '/friendgoals': (context) {
+              Friend arg = ModalRoute.of(context)?.settings.arguments as Friend;
+              return FriendGoalsScreen(friend: arg,);
+            }
           }),
     );
   }

@@ -26,8 +26,6 @@ class AuthProvider extends ChangeNotifier {
 
 
   Future<Map<String, dynamic>> signIn(String email, String password) async {
-    Map<String, dynamic> result;
-
     final Map<String, dynamic> loginData = {
         'email': email,
         'password': password
@@ -70,7 +68,6 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> signUp(String firstName, String lastName, String email, String password) async {
-
     final Map<String, dynamic> registrationData = {
         'firstName': firstName,
         'lastName': lastName,
@@ -89,7 +86,6 @@ class AuthProvider extends ChangeNotifier {
     Map<String, dynamic> result;
     Map responseMap = json.decode(response.body);
 
-    print(response.statusCode);
     if (response.statusCode == 200) {
       User authUser = User.fromMap(responseMap);
 
