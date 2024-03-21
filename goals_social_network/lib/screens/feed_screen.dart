@@ -42,7 +42,7 @@ class _FeedScreenState extends State<FeedScreen> {
             child: ViewFriendsScreen()),
         appBar: AppBar(
           title: Text(
-            'My Goals(${Provider.of<GoalsProvider>(context).goals.length})',
+            'My Goals (${Provider.of<GoalsProvider>(context).goals.length})',
             style: const TextStyle(
               color: Colors.white
           )),

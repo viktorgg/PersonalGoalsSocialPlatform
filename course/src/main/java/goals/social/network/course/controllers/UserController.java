@@ -55,4 +55,10 @@ public class UserController {
         }
         return new ResponseEntity<>("Users not found", HttpStatus.BAD_REQUEST);
     }
+
+    @GetMapping("/findAllByName/{name}")
+    public ResponseEntity<?> getUsersByName(@PathVariable String name) {
+        List<User> users = userRepository.findByNameContaining(name.toUpperCase());
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
 }
