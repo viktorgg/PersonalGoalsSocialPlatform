@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 
-import '../models/user.dart';
+import '../models/auth_user.dart';
 
 class UserProvider extends ChangeNotifier {
-  late User _user;
+  late AuthUser _user;
 
-  User get user => _user;
+  AuthUser get user => _user;
 
-  void setUser(User user) {
+  void setUser(AuthUser user) {
     _user = user;
     notifyListeners();
   }

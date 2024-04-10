@@ -2,7 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/user.dart';
+import '../models/auth_user.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user_provider.dart';
 import '../services/validators.dart';
@@ -28,7 +28,7 @@ class _SignInScreenState extends State<SignInScreen> {
       autofocus: false,
       validator: (value) => value!.isEmpty ? "Please enter your email" : validateEmail(value),
       onSaved: (value) => _email = value!,
-      decoration: buildInputDecoration("Confirm password", Icons.email),
+      decoration: buildInputDecoration("Input email", Icons.email),
     );
 
     final passwordField = TextFormField(
@@ -36,7 +36,7 @@ class _SignInScreenState extends State<SignInScreen> {
       obscureText: true,
       validator: (value) => value!.isEmpty ? "Please enter your password" : null,
       onSaved: (value) => _password = value!,
-      decoration: buildInputDecoration("Confirm password", Icons.lock),
+      decoration: buildInputDecoration("Input password", Icons.lock),
     );
 
     var loading = const Row(
@@ -73,7 +73,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
         successfulMessage.then((response) {
           if (response.containsKey("data")) {
-            User user = response['data'];
+            AuthUser user = response['data'];
             Provider.of<UserProvider>(context, listen: false).setUser(user);
             Navigator.pushReplacementNamed(context, '/feed');
           } else {

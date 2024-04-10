@@ -1,6 +1,5 @@
 package goals.social.network.course.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
@@ -32,6 +31,9 @@ public class User implements UserDetails {
 
     @Column(unique = true, nullable = false)
     String email;
+
+    @Column(nullable = false, length = 20)
+    String phone;
 
     @Column(nullable = false)
     String password;
@@ -80,7 +82,8 @@ public class User implements UserDetails {
                 "id", id,
                 "firstName", firstName,
                 "lastName", lastName,
-                "email", email
+                "email", email,
+                "phone", phone
         );
     }
 
@@ -92,7 +95,11 @@ public class User implements UserDetails {
     @Fetch(FetchMode.SUBSELECT)
     private Set<UserRelations> following = new HashSet<>();
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userOwner")
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Goal> goalsOwned = new ArrayList<>();
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @Fetch(FetchMode.SUBSELECT)
-    private List<Goal> goals = new ArrayList<>();
+    private Set<UserGoalRelations> goalsFollowed = new HashSet<>();
 }

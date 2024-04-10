@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:goals_social_network/providers/auth_provider.dart';
-import 'package:goals_social_network/providers/goals_provider.dart';
+import 'package:goals_social_network/providers/goals_owned_provider.dart';
 import 'package:goals_social_network/providers/user_provider.dart';
 import 'package:goals_social_network/screens/feed_screen.dart';
 import 'package:goals_social_network/screens/friend_goals_screen.dart';
+import 'package:goals_social_network/screens/my_goals_screen.dart';
 import 'package:goals_social_network/screens/signin_screen.dart';
 import 'package:goals_social_network/screens/signup_screen.dart';
-import 'package:goals_social_network/services/user_services.dart';
+import 'package:goals_social_network/services/auth_user_services.dart';
+import 'package:goals_social_network/services/globals.dart';
 import 'package:provider/provider.dart';
 
-import 'models/friend.dart';
+import 'models/auth_user.dart';
 import 'models/user.dart';
 
 void main() {
@@ -22,15 +24,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    Future<User> getUserData() => UserServices.getUser();
+    Future<AuthUser> getUserData() => AuthUserServices.getUser();
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => GoalsProvider()),
+        ChangeNotifierProvider(create: (_) => GoalsOwnedProvider()),
       ],
       child: MaterialApp(
+          navigatorKey: NavigationService.navigatorKey,
           title: 'Flutter Demo',
           theme: ThemeData(
             primarySwatch: Colors.blue,
@@ -48,9 +51,8 @@ class MyApp extends StatelessWidget {
                       return Text('Error: ${snapshot.error}');
                     } else if (snapshot.data?.token == null) {
                       return const SignInScreen();
-                    }
-                    else {
-                      UserServices.removeUser();
+                    } else {
+                      AuthUserServices.removeUser();
                     }
                     return const SignInScreen();
                 }
@@ -60,9 +62,12 @@ class MyApp extends StatelessWidget {
             '/signin': (context) => const SignInScreen(),
             '/signup': (context) => const SignUpScreen(),
             '/friendgoals': (context) {
-              Friend arg = ModalRoute.of(context)?.settings.arguments as Friend;
-              return FriendGoalsScreen(friend: arg,);
-            }
+              User arg = ModalRoute.of(context)?.settings.arguments as User;
+              return FriendGoalsScreen(
+                user: arg,
+              );
+            },
+            '/mygoals': (context) => const MyGoalsScreen(),
           }),
     );
   }

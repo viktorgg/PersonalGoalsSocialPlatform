@@ -33,6 +33,7 @@ public class AuthController {
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(request.getPassword())
+                .phone(request.getPhone())
                 .role(Role.ROLE_USER)
                 .build();
         String token = authenticationService.signUp(user);

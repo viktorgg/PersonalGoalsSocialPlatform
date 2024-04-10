@@ -2,7 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/user.dart';
+import '../models/auth_user.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user_provider.dart';
 import '../services/validators.dart';
@@ -18,9 +18,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final formKey = GlobalKey<FormState>();
 
-  late String _firstName, _lastName, _email, _password;
-
-  get emailField => null;
+  late String _firstName, _lastName, _email, _password, _phone;
 
   @override
   Widget build(BuildContext context) {
@@ -30,21 +28,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
       autofocus: false,
       validator: (value) => value!.isEmpty ? "Please enter your first name" : null,
       onSaved: (value) => _firstName = value!,
-      decoration: buildInputDecoration("Confirm password", Icons.account_circle_outlined),
+      decoration: buildInputDecoration("Input first name", Icons.account_circle_outlined),
     );
 
     final lastNameField = TextFormField(
       autofocus: false,
       validator: (value) => value!.isEmpty ? "Please enter your last name" : null,
       onSaved: (value) => _lastName = value!,
-      decoration: buildInputDecoration("Confirm password", Icons.account_circle_outlined),
+      decoration: buildInputDecoration("Input last name", Icons.account_circle_outlined),
     );
 
     final emailField = TextFormField(
       autofocus: false,
       validator: (value) => value!.isEmpty ? "Please enter your email" : validateEmail(value),
       onSaved: (value) => _email = value!,
-      decoration: buildInputDecoration("Confirm password", Icons.email),
+      decoration: buildInputDecoration("Input email", Icons.email),
+    );
+
+    final phoneField = TextFormField(
+      autofocus: false,
+      onSaved: (value) => _phone = value!,
+      decoration: buildInputDecoration("Input phone number", Icons.phone_android),
     );
 
     final passwordField = TextFormField(
@@ -59,7 +63,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         }
       },
       onSaved: (value) => _password = value!,
-      decoration: buildInputDecoration("Confirm password", Icons.lock),
+      decoration: buildInputDecoration("Input password", Icons.lock),
     );
 
     final confirmPasswordField = TextFormField(
@@ -97,9 +101,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final form = formKey.currentState;
       if (form!.validate()) {
         form.save();
-        auth.signUp(_firstName, _lastName, _email, _password).then((response) {
+        auth.signUp(_firstName, _lastName, _email, _phone, _password).then((response) {
           if (response.containsKey("data")) {
-            User user = response['data'];
+            AuthUser user = response['data'];
             Provider.of<UserProvider>(context, listen: false).setUser(user);
             Navigator.pushReplacementNamed(context, '/feed');
           } else {
@@ -121,7 +125,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset : false,
+        resizeToAvoidBottomInset : true,
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(40.0),
           child: Form(
@@ -141,6 +145,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 label("Email"),
                 const SizedBox(height: 5.0),
                 emailField,
+                const SizedBox(height: 15.0),
+                label("Phone number (Optional)"),
+                const SizedBox(height: 5.0),
+                phoneField,
                 const SizedBox(height: 15.0),
                 label("Password"),
                 const SizedBox(height: 10.0),

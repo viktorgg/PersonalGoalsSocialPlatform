@@ -1,6 +1,8 @@
 package goals.social.network.course.services;
 
+import goals.social.network.course.models.Goal;
 import goals.social.network.course.models.User;
+import goals.social.network.course.models.UserGoalRelations;
 import goals.social.network.course.models.UserRelations;
 import goals.social.network.course.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,5 +45,14 @@ public class UserService {
             followingList.add(userRel.getUser());
         }
         return followingList;
+    }
+
+    public List<Goal> getUserGoalsFollowed(User user) {
+        Set<UserGoalRelations> goalsFollowed = user.getGoalsFollowed();
+        List<Goal> goalsFollowedList = new ArrayList<>();
+        for (UserGoalRelations userGoalsRel : goalsFollowed) {
+            goalsFollowedList.add(userGoalsRel.getGoal());
+        }
+        return goalsFollowedList;
     }
 }

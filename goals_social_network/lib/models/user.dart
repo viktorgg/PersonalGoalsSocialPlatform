@@ -1,25 +1,20 @@
 class User {
-  final int userId;
+  final int id;
+  final String email;
   final String firstName;
   final String lastName;
-  final String email;
-  final String token;
+  final String phone;
+  //final String profileImageUrl;
 
-  User({
-    required this.userId,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.token
-  });
+  const User({required this.id, required this.firstName, required this.lastName, required this.email, required this.phone});
 
   factory User.fromMap(Map userMap) {
     return User(
-        userId: userMap['id'],
-        firstName: userMap['firstName'],
-        lastName: userMap['lastName'],
-        email: userMap['email'],
-        token: userMap['token'],
+      id: userMap['id'],
+      firstName: userMap['firstName'],
+      lastName: userMap['lastName'],
+      email: userMap['email'],
+      phone: userMap['phone'],
     );
   }
 }

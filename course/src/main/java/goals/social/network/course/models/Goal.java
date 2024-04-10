@@ -1,13 +1,17 @@
 package goals.social.network.course.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -30,20 +34,23 @@ public class Goal {
     @Column(nullable = false)
     private Boolean done;
 
-    public Goal(String title, String description, boolean done, User user) {
+    public Goal(String title, String description, boolean done, User userOwner) {
         this.title = title;
         this.description = description;
         this.done = done;
-        this.user = user;
+        this.userOwner = userOwner;
     }
 
     public Map<String, Object> toMap() {
-        return Map.of("id", id, "title", title, "description", description, "done", done, "user", user);
+        return Map.of("id", id, "title", title, "description", description, "done", done, "userOwner", userOwner.toMap());
     }
 
-    @JsonIgnore
+    @JsonIncludeProperties(value = {"id", "firstName", "lastName", "email", "phone"})
     @ManyToOne()
     @JoinColumn(name="user_id", referencedColumnName = "id", nullable = false)
-    private User user;
+    private User userOwner;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "goal")
+    @Fetch(FetchMode.SUBSELECT)
+    private Set<UserGoalRelations> usersFollowing = new HashSet<>();
 }

@@ -1,6 +1,6 @@
 flutter/ephemeral/
 
-# Visual Studio user.dart-specific files.
+# Visual Studio auth_user.dart-specific files.
 *.suo
 *.user
 *.userosscache

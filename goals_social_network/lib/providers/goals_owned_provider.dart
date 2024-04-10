@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
-import 'package:goals_social_network/services/goal_services.dart';
 import 'package:goals_social_network/models/goal.dart';
+import 'package:goals_social_network/services/goal_services.dart';
 
-class GoalsProvider extends ChangeNotifier {
-  List<Goal> goals = [];
+class GoalsOwnedProvider extends ChangeNotifier {
+  List<Goal> goalsOwned = [];
 
   void createGoal(String title, String description) async {
     Goal goal = await GoalServices.createGoal(title, description);
-    goals.add(goal);
+    goalsOwned.insert(0, goal);
     notifyListeners();
   }
 
@@ -18,7 +18,7 @@ class GoalsProvider extends ChangeNotifier {
   }
 
   void deleteGoal(Goal goal) {
-    goals.remove(goal);
+    goalsOwned.remove(goal);
     GoalServices.deleteGoal(goal.id);
     notifyListeners();
   }

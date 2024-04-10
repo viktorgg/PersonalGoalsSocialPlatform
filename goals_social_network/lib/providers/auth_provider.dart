@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:goals_social_network/services/globals.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:goals_social_network/services/user_services.dart';
+import 'package:goals_social_network/services/auth_user_services.dart';
 import 'package:http/http.dart';
 
-import '../models/user.dart';
+import '../models/auth_user.dart';
 
 enum Status {
   notLoggedIn,
@@ -46,9 +46,9 @@ class AuthProvider extends ChangeNotifier {
     Map<String, dynamic> result;
     Map responseMap = json.decode(response.body);
     if (response.statusCode == 200) {
-      User authUser = User.fromMap(responseMap);
+      AuthUser authUser = AuthUser.fromMap(responseMap);
 
-      UserServices.saveUser(authUser);
+      AuthUserServices.saveUser(authUser);
 
       _loggedInStatus = Status.loggedIn;
       notifyListeners();
@@ -67,11 +67,12 @@ class AuthProvider extends ChangeNotifier {
     return result;
   }
 
-  Future<Map<String, dynamic>> signUp(String firstName, String lastName, String email, String password) async {
+  Future<Map<String, dynamic>> signUp(String firstName, String lastName, String email, String phone, String password) async {
     final Map<String, dynamic> registrationData = {
         'firstName': firstName,
         'lastName': lastName,
         'email': email,
+        'phone': phone,
         'password': password,
     };
 
@@ -87,9 +88,9 @@ class AuthProvider extends ChangeNotifier {
     Map responseMap = json.decode(response.body);
 
     if (response.statusCode == 200) {
-      User authUser = User.fromMap(responseMap);
+      AuthUser authUser = AuthUser.fromMap(responseMap);
 
-      UserServices.saveUser(authUser);
+      AuthUserServices.saveUser(authUser);
       result = {
         'message': 'Successfully registered',
         'data': authUser

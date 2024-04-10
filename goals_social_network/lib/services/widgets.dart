@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'globals.dart';
+
 MaterialButton longButtons(String title, Function() action,
     {Color color = const Color(0xfff063057), Color textColor = Colors.white}) {
   return MaterialButton(
@@ -24,8 +26,8 @@ label(String title) => Text(title);
 
 InputDecoration buildInputDecoration(String hintText, IconData icon) {
   return InputDecoration(
-    prefixIcon: Icon(icon, color: const Color.fromRGBO(50, 62, 72, 1.0)),
-    // hintText: hintText,
+    prefixIcon: Icon(icon, color: baseColor),
+    hintText: hintText,
     contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
   );
