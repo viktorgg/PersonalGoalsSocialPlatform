@@ -52,4 +52,14 @@ public class GoalPostReviewController {
         }
         return new ResponseEntity<>("Goal post with ID %s is not found".formatted(goalPostId), HttpStatus.BAD_REQUEST);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteGoalPostReview(@PathVariable Long id) {
+        boolean exists = goalPostReviewRepository.existsById(id);
+        if (exists) {
+            goalPostReviewRepository.deleteById(id);
+            return new ResponseEntity<>("Review with ID %s is deleted".formatted(id), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Review with ID %s is not found".formatted(id), HttpStatus.BAD_REQUEST);
+    }
 }
