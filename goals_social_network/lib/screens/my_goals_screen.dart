@@ -70,8 +70,8 @@ class _MyGoalsScreenState extends State<MyGoalsScreen> {
                       itemBuilder: (context, index) {
                         Goal? goal = goalsData.goalsOwned[index];
                         return GoalCard(
-                          goal: goal!,
-                          goalsData: goalsData,
+                          goal: goal,
+                          //goalsData: goalsData,
                         );
                       });
                 })),
@@ -83,6 +83,7 @@ class _MyGoalsScreenState extends State<MyGoalsScreen> {
               ),
               onPressed: () {
                 showModalBottomSheet(
+                    isScrollControlled: true,
                     context: context,
                     builder: (context) {
                       return const CreateGoalScreen();

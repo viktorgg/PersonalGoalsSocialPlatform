@@ -26,29 +26,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     final firstNameField = TextFormField(
       autofocus: false,
-      validator: (value) => value!.isEmpty ? "Please enter your first name" : null,
+      validator: (value) =>
+          value!.isEmpty ? "Please enter your first name" : null,
       onSaved: (value) => _firstName = value!,
-      decoration: buildInputDecoration("Input first name", Icons.account_circle_outlined),
+      decoration: buildInputDecoration(
+          "Enter first name", Icons.account_circle_outlined),
     );
 
     final lastNameField = TextFormField(
       autofocus: false,
-      validator: (value) => value!.isEmpty ? "Please enter your last name" : null,
+      validator: (value) =>
+          value!.isEmpty ? "Please enter your last name" : null,
       onSaved: (value) => _lastName = value!,
-      decoration: buildInputDecoration("Input last name", Icons.account_circle_outlined),
+      decoration: buildInputDecoration(
+          "Enter last name", Icons.account_circle_outlined),
     );
 
     final emailField = TextFormField(
       autofocus: false,
-      validator: (value) => value!.isEmpty ? "Please enter your email" : validateEmail(value),
+      validator: (value) =>
+          value!.isEmpty ? "Please enter your email" : validateEmail(value),
       onSaved: (value) => _email = value!,
-      decoration: buildInputDecoration("Input email", Icons.email),
+      decoration: buildInputDecoration("Enter email", Icons.email),
     );
 
     final phoneField = TextFormField(
       autofocus: false,
       onSaved: (value) => _phone = value!,
-      decoration: buildInputDecoration("Input phone number", Icons.phone_android),
+      decoration:
+          buildInputDecoration("Enter phone number", Icons.phone_android),
     );
 
     final passwordField = TextFormField(
@@ -63,13 +69,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         }
       },
       onSaved: (value) => _password = value!,
-      decoration: buildInputDecoration("Input password", Icons.lock),
+      decoration: buildInputDecoration("Enter password", Icons.lock),
     );
 
     final confirmPasswordField = TextFormField(
       autofocus: false,
       obscureText: true,
-      validator: (value) => value! != _password ? "Passwords don't match!" : null,
+      validator: (value) =>
+          value! != _password ? "Passwords don't match!" : null,
       onSaved: (value) => _password = value!,
       decoration: buildInputDecoration("Confirm password", Icons.lock),
     );
@@ -89,7 +96,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           style: TextButton.styleFrom(
             padding: const EdgeInsets.only(left: 0.0),
           ),
-          child: const Text("Sign in", style: TextStyle(fontWeight: FontWeight.w300)),
+          child: const Text("Sign in",
+              style: TextStyle(fontWeight: FontWeight.w300)),
           onPressed: () {
             Navigator.pushReplacementNamed(context, '/signin');
           },
@@ -101,7 +109,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final form = formKey.currentState;
       if (form!.validate()) {
         form.save();
-        auth.signUp(_firstName, _lastName, _email, _phone, _password).then((response) {
+        auth
+            .signUp(_firstName, _lastName, _email, _phone, _password)
+            .then((response) {
           if (response.containsKey("data")) {
             AuthUser user = response['data'];
             Provider.of<UserProvider>(context, listen: false).setUser(user);
@@ -125,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset : true,
+        resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(40.0),
           child: Form(

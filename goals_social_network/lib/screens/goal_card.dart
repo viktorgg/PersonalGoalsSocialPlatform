@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../models/goal.dart';
-import '../providers/goals_owned_provider.dart';
 
 class GoalCard extends StatelessWidget {
   final Goal goal;
-  final GoalsOwnedProvider? goalsData;
 
-  const GoalCard({super.key, required this.goal, this.goalsData});
+  //final GoalsOwnedProvider? goalsData;
+
+  const GoalCard({super.key, required this.goal});
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +18,24 @@ class GoalCard extends StatelessWidget {
         children: [
           ListTile(
             leading: const Icon(Icons.arrow_drop_down_circle),
-            title: Text(goal.title),
-            trailing: IconButton(
-                alignment: Alignment.topRight,
-                onPressed: () {
-                  goalsData?.deleteGoal(goal);
-                },
-                icon: const Icon(Icons.close)),
+            title:
+                Text('${goal.userOwner.firstName} ${goal.userOwner.lastName}'),
+            subtitle: const Text("Some time ago"),
+            // trailing: IconButton(
+            //     alignment: Alignment.topRight,
+            //     onPressed: () {
+            //       goalsData?.deleteGoal(goal);
+            //     },
+            //     icon: const Icon(Icons.close)),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              goal.title,
+              style: TextStyle(
+                color: Colors.black.withOpacity(0.6),
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),

@@ -102,4 +102,8 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @Fetch(FetchMode.SUBSELECT)
     private Set<UserGoalRelations> goalsFollowed = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userOwner")
+    @Fetch(FetchMode.SUBSELECT)
+    private List<GoalPostReview> postReviewsOwned = new ArrayList<>();
 }

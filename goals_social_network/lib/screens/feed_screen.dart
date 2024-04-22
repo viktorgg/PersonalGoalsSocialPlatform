@@ -123,7 +123,7 @@ class _FeedScreenState extends State<FeedScreen> {
                       Goal? goal = _goalsFollowed?[index];
                       return GoalCard(
                         goal: goal!,
-                        goalsData: null,
+                        //goalsData: null,
                       );
                     })),
           );

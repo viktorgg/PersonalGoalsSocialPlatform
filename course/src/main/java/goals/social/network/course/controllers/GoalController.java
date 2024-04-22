@@ -1,7 +1,11 @@
 package goals.social.network.course.controllers;
 
 import goals.social.network.course.models.Goal;
+import goals.social.network.course.models.GoalPostReview;
+import goals.social.network.course.models.GoalProgressPost;
 import goals.social.network.course.models.User;
+import goals.social.network.course.repositories.GoalPostReviewRepository;
+import goals.social.network.course.repositories.GoalProgressPostRepositoy;
 import goals.social.network.course.repositories.GoalRepository;
 import goals.social.network.course.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,16 +35,18 @@ public class GoalController {
     public ResponseEntity<?> createGoal(@RequestBody Map<String, Object> payload) {
         int userId = (int) payload.get("userId");
         User user = userRepository.findById((long) userId).get();
-        Goal goal = new Goal((String) payload.get("title"),
-                            (String) payload.get("description"),
-                            (Boolean) payload.get("done"),
-                            user);
+        Goal goal = new Goal(
+                (String) payload.get("title"),
+                (String) payload.get("description"),
+                (Boolean) payload.get("done"),
+                user
+        );
         goalRepository.save(goal);
         return new ResponseEntity<>(goal.toMap(), HttpStatus.OK);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateGoal(@PathVariable Long id, @RequestBody Goal goal) {
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<?> editGoal(@PathVariable Long id, @RequestBody Goal goal) {
         boolean exists = goalRepository.existsById(id);
         if (exists) {
             Goal goalToUpdate = goalRepository.getReferenceById(id);

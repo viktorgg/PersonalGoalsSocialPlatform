@@ -6,12 +6,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Getter
 @Setter
@@ -34,6 +35,14 @@ public class Goal {
     @Column(nullable = false)
     private Boolean done;
 
+    @Column(updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column()
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
     public Goal(String title, String description, boolean done, User userOwner) {
         this.title = title;
         this.description = description;
@@ -53,4 +62,9 @@ public class Goal {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "goal")
     @Fetch(FetchMode.SUBSELECT)
     private Set<UserGoalRelations> usersFollowing = new HashSet<>();
+
+    @JsonIncludeProperties(value = {"id", "description", "postReviews"})
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "goal")
+    @Fetch(FetchMode.SUBSELECT)
+    private List<GoalProgressPost> progressPosts = new ArrayList<>();
 }

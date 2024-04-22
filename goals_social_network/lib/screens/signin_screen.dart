@@ -26,17 +26,19 @@ class _SignInScreenState extends State<SignInScreen> {
 
     final emailField = TextFormField(
       autofocus: false,
-      validator: (value) => value!.isEmpty ? "Please enter your email" : validateEmail(value),
+      validator: (value) =>
+          value!.isEmpty ? "Please enter your email" : validateEmail(value),
       onSaved: (value) => _email = value!,
-      decoration: buildInputDecoration("Input email", Icons.email),
+      decoration: buildInputDecoration("Enter email", Icons.email),
     );
 
     final passwordField = TextFormField(
       autofocus: false,
       obscureText: true,
-      validator: (value) => value!.isEmpty ? "Please enter your password" : null,
+      validator: (value) =>
+          value!.isEmpty ? "Please enter your password" : null,
       onSaved: (value) => _password = value!,
-      decoration: buildInputDecoration("Input password", Icons.lock),
+      decoration: buildInputDecoration("Enter password", Icons.lock),
     );
 
     var loading = const Row(
@@ -54,7 +56,8 @@ class _SignInScreenState extends State<SignInScreen> {
           style: TextButton.styleFrom(
             padding: const EdgeInsets.only(left: 0.0),
           ),
-          child: const Text("Sign up", style: TextStyle(fontWeight: FontWeight.w300)),
+          child: const Text("Sign up",
+              style: TextStyle(fontWeight: FontWeight.w300)),
           onPressed: () {
             Navigator.pushReplacementNamed(context, '/signup');
           },
@@ -69,7 +72,7 @@ class _SignInScreenState extends State<SignInScreen> {
         form.save();
 
         final Future<Map<String, dynamic>> successfulMessage =
-        auth.signIn(_email, _password);
+            auth.signIn(_email, _password);
 
         successfulMessage.then((response) {
           if (response.containsKey("data")) {
