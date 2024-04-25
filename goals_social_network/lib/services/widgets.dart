@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:goals_social_network/models/goal_post_review.dart';
 
 import 'globals.dart';
 
@@ -31,4 +32,27 @@ InputDecoration buildInputDecoration(String hintText, IconData icon) {
     contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
   );
+}
+
+ListView reviewTile(List<GoalPostReview> reviews) {
+  return ListView.builder(
+      shrinkWrap: true,
+      padding: const EdgeInsets.all(0.0),
+      itemCount: reviews.length,
+      itemBuilder: (context, i) {
+        return Column(
+          children: [
+            ListTile(
+              leading: const CircleAvatar(
+                backgroundColor: Colors.grey,
+                //backgroundImage: new NetworkImage(friendsModel.profileImageUrl),
+              ),
+              title: Text(
+                  '${reviews[i].userOwner.firstName} + ${reviews[i].userOwner.lastName} commented:'),
+              subtitle: Text(reviews[i].comment),
+              trailing: const Icon(Icons.check_box),
+            )
+          ],
+        );
+      });
 }

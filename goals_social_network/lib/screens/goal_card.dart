@@ -20,7 +20,7 @@ class GoalCard extends StatelessWidget {
             leading: const Icon(Icons.arrow_drop_down_circle),
             title:
                 Text('${goal.userOwner.firstName} ${goal.userOwner.lastName}'),
-            subtitle: const Text("Some time ago"),
+            subtitle: const Text('Some time ago'),
             // trailing: IconButton(
             //     alignment: Alignment.topRight,
             //     onPressed: () {
@@ -57,13 +57,19 @@ class GoalCard extends StatelessWidget {
                   Share.share('check out my website https://example.com',
                       subject: 'Look what I made!');
                 },
-                child: const Text('ACTION 1'),
+                child: const Text('Share'),
               ),
               TextButton(
                 onPressed: () {
-                  // DO STH
+                  Navigator.pushReplacementNamed(context, '/goaldetails',
+                      arguments: goal);
                 },
-                child: const Text('ACTION 2'),
+                child: const Text('View details'),
+              ),
+              Text(
+                'Progress updates: ${goal.progressPosts.length}',
+                style:
+                    TextStyle(color: Colors.black.withOpacity(1), fontSize: 15),
               ),
             ],
           ),

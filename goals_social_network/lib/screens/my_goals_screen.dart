@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:goals_social_network/screens/goal_card.dart';
-import 'package:goals_social_network/screens/view_friends_screen.dart';
 import 'package:goals_social_network/services/user_services.dart';
 import 'package:provider/provider.dart';
 
@@ -42,13 +41,21 @@ class _MyGoalsScreenState extends State<MyGoalsScreen> {
             ),
           )
         : Scaffold(
-            drawer: const Drawer(child: ViewFriendsScreen()),
             appBar: AppBar(
               title:
                   const Text('My Goals', style: TextStyle(color: Colors.white)),
               centerTitle: true,
               backgroundColor: baseColor,
               iconTheme: const IconThemeData(color: Colors.white),
+              leading: InkWell(
+                onTap: () {
+                  Navigator.pushReplacementNamed(context, '/feed');
+                },
+                child: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
+              ),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.logout),

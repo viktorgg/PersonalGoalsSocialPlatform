@@ -1,11 +1,7 @@
 package goals.social.network.course.controllers;
 
 import goals.social.network.course.models.Goal;
-import goals.social.network.course.models.GoalPostReview;
-import goals.social.network.course.models.GoalProgressPost;
 import goals.social.network.course.models.User;
-import goals.social.network.course.repositories.GoalPostReviewRepository;
-import goals.social.network.course.repositories.GoalProgressPostRepositoy;
 import goals.social.network.course.repositories.GoalRepository;
 import goals.social.network.course.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor

@@ -4,6 +4,7 @@ import 'package:goals_social_network/providers/goals_owned_provider.dart';
 import 'package:goals_social_network/providers/user_provider.dart';
 import 'package:goals_social_network/screens/feed_screen.dart';
 import 'package:goals_social_network/screens/friend_goals_screen.dart';
+import 'package:goals_social_network/screens/goal_details_screen.dart';
 import 'package:goals_social_network/screens/my_goals_screen.dart';
 import 'package:goals_social_network/screens/signin_screen.dart';
 import 'package:goals_social_network/screens/signup_screen.dart';
@@ -12,6 +13,7 @@ import 'package:goals_social_network/services/globals.dart';
 import 'package:provider/provider.dart';
 
 import 'models/auth_user.dart';
+import 'models/goal.dart';
 import 'models/user.dart';
 
 void main() {
@@ -65,6 +67,12 @@ class MyApp extends StatelessWidget {
               User arg = ModalRoute.of(context)?.settings.arguments as User;
               return FriendGoalsScreen(
                 user: arg,
+              );
+            },
+            '/goaldetails': (context) {
+              Goal arg = ModalRoute.of(context)?.settings.arguments as Goal;
+              return GoalDetailsScreen(
+                goal: arg,
               );
             },
             '/mygoals': (context) => const MyGoalsScreen(),
