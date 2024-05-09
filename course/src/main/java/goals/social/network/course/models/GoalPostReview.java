@@ -23,7 +23,7 @@ public class GoalPostReview {
     private Long id;
 
     @Column(nullable = false)
-    private boolean isApproved;
+    private boolean approved;
 
     @Column(nullable = false)
     private String comment;
@@ -36,8 +36,8 @@ public class GoalPostReview {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public GoalPostReview(boolean isApproved, String comment, GoalProgressPost goalPost, User userOwner) {
-        this.isApproved = isApproved;
+    public GoalPostReview(boolean approved, String comment, GoalProgressPost goalPost, User userOwner) {
+        this.approved = approved;
         this.comment = comment;
         this.goalPost = goalPost;
         this.userOwner = userOwner;
@@ -46,7 +46,7 @@ public class GoalPostReview {
     public Map<String, Object> toMap() {
         return Map.of(
                 "id", id,
-                "isApproved", isApproved,
+                "approved", approved,
                 "comment", comment,
                 "goalPost", goalPost.toMap(),
                 "userOwner", userOwner.toMap()

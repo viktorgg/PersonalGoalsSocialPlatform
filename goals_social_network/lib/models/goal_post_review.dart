@@ -3,13 +3,13 @@ import 'package:goals_social_network/models/user.dart';
 class GoalPostReview {
   final int id;
   final String comment;
-  final bool isApproved;
+  final bool approved;
   final User userOwner;
 
   GoalPostReview({
     required this.id,
     required this.comment,
-    required this.isApproved,
+    required this.approved,
     required this.userOwner,
   });
 
@@ -17,7 +17,7 @@ class GoalPostReview {
     return GoalPostReview(
       id: goalPostReviewMap['id'],
       comment: goalPostReviewMap['comment'],
-      isApproved: goalPostReviewMap['approved'],
+      approved: goalPostReviewMap['approved'],
       userOwner: User.fromMap(goalPostReviewMap['userOwner']),
     );
   }
@@ -33,7 +33,7 @@ class GoalPostReview {
   Map<String, dynamic> toMap() {
     return {
       'comment': comment,
-      'approved': isApproved,
+      'approved': approved,
     };
   }
 }

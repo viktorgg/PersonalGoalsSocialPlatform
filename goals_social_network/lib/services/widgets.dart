@@ -40,19 +40,20 @@ ListView reviewTile(List<GoalPostReview> reviews) {
       padding: const EdgeInsets.all(0.0),
       itemCount: reviews.length,
       itemBuilder: (context, i) {
-        return Column(
-          children: [
-            ListTile(
-              leading: const CircleAvatar(
-                backgroundColor: Colors.grey,
-                //backgroundImage: new NetworkImage(friendsModel.profileImageUrl),
-              ),
-              title: Text(
-                  '${reviews[i].userOwner.firstName} + ${reviews[i].userOwner.lastName} commented:'),
-              subtitle: Text(reviews[i].comment),
-              trailing: const Icon(Icons.check_box),
-            )
-          ],
+        return ListTile(
+          leading: const CircleAvatar(
+            backgroundColor: Colors.grey,
+            //backgroundImage: new NetworkImage(friendsModel.profileImageUrl),
+          ),
+          title: reviews[i].approved
+              ? Text(
+                  '${reviews[i].userOwner.firstName} ${reviews[i].userOwner.lastName} approves the update:')
+              : Text(
+                  '${reviews[i].userOwner.firstName} ${reviews[i].userOwner.lastName} disapproves the update:'),
+          subtitle: Text(reviews[i].comment),
+          trailing: reviews[i].approved
+              ? const Icon(Icons.thumb_up_alt_outlined, color: Colors.green)
+              : const Icon(Icons.thumb_down_alt_outlined, color: Colors.red),
         );
       });
 }

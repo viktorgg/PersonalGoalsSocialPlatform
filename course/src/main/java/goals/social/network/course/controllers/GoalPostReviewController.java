@@ -35,7 +35,7 @@ public class GoalPostReviewController {
         int userId = (int) payload.get("byUserId");
         User user = userRepository.findById((long) userId).get();
         GoalPostReview postReview = new GoalPostReview(
-                (boolean) payload.get("isApproved"),
+                (boolean) payload.get("approved"),
                 (String) payload.get("comment"),
                 goalPost,
                 user

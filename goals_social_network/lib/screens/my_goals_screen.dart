@@ -93,7 +93,10 @@ class _MyGoalsScreenState extends State<MyGoalsScreen> {
                     isScrollControlled: true,
                     context: context,
                     builder: (context) {
-                      return const CreateGoalScreen();
+                      return const FractionallySizedBox(
+                        heightFactor: 0.7,
+                        child: CreateGoalScreen(),
+                      );
                     });
               },
             ),

@@ -45,6 +45,7 @@ class UserServices {
     List responseGoals = jsonDecode(response.body);
     List<Goal> goals = [];
     for (var element in responseGoals) {
+      print(Goal.fromMap(element));
       goals.add(Goal.fromMap(element));
     }
 

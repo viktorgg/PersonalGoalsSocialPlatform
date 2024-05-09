@@ -11,10 +11,10 @@ import 'globals.dart';
 
 class GoalPostReviewServices {
   static Future<GoalPostReview> createGoalPostReview(
-      bool isApproved, String comment, GoalPost goalPost) async {
+      bool approved, String comment, GoalPost goalPost) async {
     AuthUser currentUser = await AuthUserServices.getUser();
     Map data = {
-      "isApproved": isApproved,
+      "approved": approved,
       "comment": comment,
       "goalPostId": goalPost.id,
       "byUserId": currentUser.userId,

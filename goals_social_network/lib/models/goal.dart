@@ -7,6 +7,7 @@ class Goal {
   final String description;
   bool done;
   final User userOwner;
+  final DateTime updatedAt;
   final List<GoalPost> progressPosts;
 
   Goal({
@@ -15,6 +16,7 @@ class Goal {
     required this.description,
     required this.done,
     required this.userOwner,
+    required this.updatedAt,
     required this.progressPosts,
   });
 
@@ -24,6 +26,7 @@ class Goal {
       title: goalMap['title'],
       description: goalMap['description'],
       done: goalMap['done'],
+      updatedAt: DateTime.parse(goalMap['updatedAt']),
       progressPosts: GoalPost.fromMapList(goalMap['progressPosts']),
       userOwner: User.fromMap(goalMap['userOwner']),
     );
@@ -35,6 +38,7 @@ class Goal {
       'description': description,
       'done': done,
       'progressPosts': progressPosts,
+      'updatedAt': updatedAt,
     };
   }
 
