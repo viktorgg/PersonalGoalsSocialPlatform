@@ -42,7 +42,6 @@ class GoalPostServices {
     var url = Uri.parse('$goalPostURL/goal/$goalId');
     Response response = await get(url, headers: headers);
     List responseGoalPosts = jsonDecode(response.body);
-    print(response.body);
 
     List<GoalPost> goalPosts = [];
     for (var element in responseGoalPosts) {

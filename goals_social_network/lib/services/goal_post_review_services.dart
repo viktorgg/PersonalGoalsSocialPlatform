@@ -45,10 +45,10 @@ class GoalPostReviewServices {
     headers.addAll(header);
 
     int goalPostId = goalPost.id;
-    var url = Uri.parse('$goalPostURL/post/$goalPostId');
+    var url = Uri.parse('$postReviewsURL/post/$goalPostId');
+
     Response response = await get(url, headers: headers);
     List responseGoalPosts = jsonDecode(response.body);
-    print(response.body);
 
     List<GoalPostReview> goalPostReviews = [];
     for (var element in responseGoalPosts) {

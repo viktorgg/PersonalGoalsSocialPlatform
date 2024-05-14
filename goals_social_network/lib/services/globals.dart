@@ -17,6 +17,23 @@ class NavigationService {
   static final navigatorKey = GlobalKey<NavigatorState>();
 }
 
+String timeAgo(DateTime updatedAt) {
+  int seconds = DateTime.now().difference(updatedAt).inSeconds;
+  if (seconds < 60) {
+    return '$seconds Seconds ago';
+  }
+  if (seconds >= 60 && seconds < 3600) {
+    return '${DateTime.now().difference(updatedAt).inMinutes} Minutes ago';
+  }
+  if (seconds >= 3600 && seconds < 86400) {
+    return '${DateTime.now().difference(updatedAt).inHours} Hours ago';
+  }
+  if (seconds > 86400) {
+    return '${DateTime.now().difference(updatedAt).inDays} Days ago';
+  }
+  return '';
+}
+
 checkSessionExpired(Response response) {
   if (response.statusCode == 403) {
     showDialog(

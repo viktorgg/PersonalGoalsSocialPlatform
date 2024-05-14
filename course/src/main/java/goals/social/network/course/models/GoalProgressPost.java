@@ -52,7 +52,7 @@ public class GoalProgressPost {
     @JoinColumn(name="goal_id", referencedColumnName = "id", nullable = false)
     private Goal goal;
 
-    @JsonIncludeProperties(value = {"id", "approved", "comment", "userOwner"})
+    @JsonIncludeProperties(value = {"id", "approved", "comment", "userOwner", "updatedAt"})
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "goalPost")
     @Fetch(FetchMode.SUBSELECT)
     private List<GoalPostReview> postReviews = new ArrayList<>();

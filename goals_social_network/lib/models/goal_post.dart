@@ -3,12 +3,14 @@ import 'goal_post_review.dart';
 class GoalPost {
   final int id;
   final String description;
+  final DateTime updatedAt;
   final List<GoalPostReview> reviews;
 
   GoalPost({
     required this.id,
     required this.description,
     required this.reviews,
+    required this.updatedAt,
   });
 
   factory GoalPost.fromMap(Map goalPostMap) {
@@ -16,6 +18,7 @@ class GoalPost {
       id: goalPostMap['id'],
       description: goalPostMap['description'],
       reviews: GoalPostReview.fromMapList(goalPostMap['postReviews']),
+      updatedAt: DateTime.parse(goalPostMap['updatedAt']),
     );
   }
 

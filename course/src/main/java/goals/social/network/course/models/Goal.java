@@ -63,7 +63,7 @@ public class Goal {
     @Fetch(FetchMode.SUBSELECT)
     private Set<UserGoalRelations> usersFollowing = new HashSet<>();
 
-    @JsonIncludeProperties(value = {"id", "description", "postReviews"})
+    @JsonIncludeProperties(value = {"id", "description", "postReviews", "updatedAt"})
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "goal")
     @Fetch(FetchMode.SUBSELECT)
     private List<GoalProgressPost> progressPosts = new ArrayList<>();

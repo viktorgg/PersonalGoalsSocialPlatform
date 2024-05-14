@@ -5,12 +5,14 @@ class GoalPostReview {
   final String comment;
   final bool approved;
   final User userOwner;
+  final DateTime updatedAt;
 
   GoalPostReview({
     required this.id,
     required this.comment,
     required this.approved,
     required this.userOwner,
+    required this.updatedAt,
   });
 
   factory GoalPostReview.fromMap(Map goalPostReviewMap) {
@@ -19,6 +21,7 @@ class GoalPostReview {
       comment: goalPostReviewMap['comment'],
       approved: goalPostReviewMap['approved'],
       userOwner: User.fromMap(goalPostReviewMap['userOwner']),
+      updatedAt: DateTime.parse(goalPostReviewMap['updatedAt']),
     );
   }
 

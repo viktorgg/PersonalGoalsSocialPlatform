@@ -3,6 +3,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../models/goal.dart';
 import '../providers/goals_owned_provider.dart';
+import '../services/globals.dart';
 
 class GoalCard extends StatelessWidget {
   final Goal goal;
@@ -21,8 +22,7 @@ class GoalCard extends StatelessWidget {
               leading: const Icon(Icons.arrow_drop_down_circle),
               title: Text(
                   '${goal.userOwner.firstName} ${goal.userOwner.lastName}'),
-              subtitle: Text(
-                  '${DateTime.now().difference(goal.updatedAt).inMinutes.toString()} minutes ago'),
+              subtitle: Text(timeAgo(goal.updatedAt)),
               trailing: ModalRoute.of(context)?.settings.name == '/mygoals'
                   ? IconButton(
                       alignment: Alignment.topRight,

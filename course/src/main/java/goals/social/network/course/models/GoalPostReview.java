@@ -49,7 +49,8 @@ public class GoalPostReview {
                 "approved", approved,
                 "comment", comment,
                 "goalPost", goalPost.toMap(),
-                "userOwner", userOwner.toMap()
+                "userOwner", userOwner.toMap(),
+                "updatedAt", updatedAt
         );
     }
 

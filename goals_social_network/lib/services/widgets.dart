@@ -34,7 +34,7 @@ InputDecoration buildInputDecoration(String hintText, IconData icon) {
   );
 }
 
-ListView reviewTile(List<GoalPostReview> reviews) {
+ListView reviewTiles(List<GoalPostReview> reviews) {
   return ListView.builder(
       shrinkWrap: true,
       padding: const EdgeInsets.all(0.0),
