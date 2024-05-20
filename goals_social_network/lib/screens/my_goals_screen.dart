@@ -7,7 +7,6 @@ import '../models/goal.dart';
 import '../providers/goals_owned_provider.dart';
 import '../services/auth_user_services.dart';
 import '../services/globals.dart';
-import 'create_goal_screen.dart';
 
 class MyGoalsScreen extends StatefulWidget {
   const MyGoalsScreen({super.key});
@@ -94,8 +93,8 @@ class _MyGoalsScreenState extends State<MyGoalsScreen> {
                     context: context,
                     builder: (context) {
                       return const FractionallySizedBox(
-                        heightFactor: 0.7,
-                        child: CreateGoalScreen(),
+                        heightFactor: 0.6,
+                        //child: CreateGoalPostScreen(),
                       );
                     });
               },

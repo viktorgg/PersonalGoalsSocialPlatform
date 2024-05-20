@@ -17,7 +17,9 @@ class GoalPost {
     return GoalPost(
       id: goalPostMap['id'],
       description: goalPostMap['description'],
-      reviews: GoalPostReview.fromMapList(goalPostMap['postReviews']),
+      reviews: goalPostMap['postReviews'] == null
+          ? []
+          : GoalPostReview.fromMapList(goalPostMap['postReviews']),
       updatedAt: DateTime.parse(goalPostMap['updatedAt']),
     );
   }

@@ -44,7 +44,12 @@ public class GoalProgressPost {
     }
 
     public Map<String, Object> toMap() {
-        return Map.of("id", id, "description", description, "goal", goal.toMap());
+        return Map.of(
+                "id", id,
+                "description", description,
+                "goal", goal.toMap(),
+                "updatedAt", updatedAt
+        );
     }
 
     @JsonIncludeProperties(value = {"id", "title", "description", "done"})

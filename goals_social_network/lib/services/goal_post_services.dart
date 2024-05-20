@@ -48,6 +48,23 @@ class GoalPostServices {
       goalPosts.add(GoalPost.fromMap(element));
     }
 
+    goalPosts.sort((a, b) {
+      var date1 = a.updatedAt;
+      var date2 = b.updatedAt;
+      return date2.compareTo(date1);
+    });
     return goalPosts;
+  }
+
+  static Future<Response> deleteGoalPost(int id) async {
+    var url = Uri.parse('$goalPostURL/$id');
+    var token = await AuthUserServices.getToken();
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+    };
+    headers.addAll(header);
+    Response response = await delete(url, headers: headers);
+    print(response.body);
+    return response;
   }
 }

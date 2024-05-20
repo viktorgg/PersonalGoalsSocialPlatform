@@ -36,6 +36,7 @@ InputDecoration buildInputDecoration(String hintText, IconData icon) {
 
 ListView reviewTiles(List<GoalPostReview> reviews) {
   return ListView.builder(
+      physics: const ScrollPhysics(),
       shrinkWrap: true,
       padding: const EdgeInsets.all(0.0),
       itemCount: reviews.length,
@@ -45,12 +46,24 @@ ListView reviewTiles(List<GoalPostReview> reviews) {
             backgroundColor: Colors.grey,
             //backgroundImage: new NetworkImage(friendsModel.profileImageUrl),
           ),
-          title: reviews[i].approved
-              ? Text(
-                  '${reviews[i].userOwner.firstName} ${reviews[i].userOwner.lastName} approves the update:')
-              : Text(
-                  '${reviews[i].userOwner.firstName} ${reviews[i].userOwner.lastName} disapproves the update:'),
-          subtitle: Text(reviews[i].comment),
+          title: Column(children: [
+            reviews[i].approved
+                ? Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                        '${reviews[i].userOwner.firstName} ${reviews[i].userOwner.lastName} approves the update'))
+                : Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                        '${reviews[i].userOwner.firstName} ${reviews[i].userOwner.lastName} disapproves the update')),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text(timeAgo(reviews[i].updatedAt),
+                    style: const TextStyle(
+                        fontSize: 12, fontStyle: FontStyle.italic))),
+          ]),
+          subtitle: Text(reviews[i].comment,
+              style: const TextStyle(fontWeight: FontWeight.bold)),
           trailing: reviews[i].approved
               ? const Icon(Icons.thumb_up_alt_outlined, color: Colors.green)
               : const Icon(Icons.thumb_down_alt_outlined, color: Colors.red),

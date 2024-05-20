@@ -10,7 +10,7 @@ class PostReviewsProvider extends ChangeNotifier {
   void createReview(bool isApproved, String comment, GoalPost post) async {
     GoalPostReview review = await GoalPostReviewServices.createGoalPostReview(
         isApproved, comment, post);
-    reviews.add(review);
+    reviews.insert(0, review);
     notifyListeners();
   }
 

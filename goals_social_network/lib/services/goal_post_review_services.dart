@@ -55,6 +55,11 @@ class GoalPostReviewServices {
       goalPostReviews.add(GoalPostReview.fromMap(element));
     }
 
+    goalPostReviews.sort((a, b) {
+      var date1 = a.updatedAt;
+      var date2 = b.updatedAt;
+      return date2.compareTo(date1);
+    });
     return goalPostReviews;
   }
 }

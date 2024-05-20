@@ -20,16 +20,16 @@ class NavigationService {
 String timeAgo(DateTime updatedAt) {
   int seconds = DateTime.now().difference(updatedAt).inSeconds;
   if (seconds < 60) {
-    return '$seconds Seconds ago';
+    return '$seconds seconds ago';
   }
   if (seconds >= 60 && seconds < 3600) {
-    return '${DateTime.now().difference(updatedAt).inMinutes} Minutes ago';
+    return '${DateTime.now().difference(updatedAt).inMinutes} minutes ago';
   }
   if (seconds >= 3600 && seconds < 86400) {
-    return '${DateTime.now().difference(updatedAt).inHours} Hours ago';
+    return '${DateTime.now().difference(updatedAt).inHours} hours ago';
   }
   if (seconds > 86400) {
-    return '${DateTime.now().difference(updatedAt).inDays} Days ago';
+    return '${DateTime.now().difference(updatedAt).inDays} days ago';
   }
   return '';
 }

@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../models/goal.dart';
 import '../services/auth_user_services.dart';
+import 'create_goal_post_screen.dart';
 
 class GoalDetailsScreen extends StatefulWidget {
   final Goal goal;
@@ -34,6 +35,7 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
   setUserId() async {
     AuthUser currentUser = await AuthUserServices.getUser();
     _authUserId = currentUser.userId;
+    setState(() {});
   }
 
   @override
@@ -133,10 +135,42 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
                     alignment: Alignment.centerLeft,
                     child: Container(
                       padding: const EdgeInsets.all(10),
-                      child: Text("Progress",
-                          style: TextStyle(
-                              color: Colors.black.withOpacity(1),
-                              fontSize: 20)),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Progress",
+                                style: TextStyle(
+                                    color: Colors.black.withOpacity(1),
+                                    fontSize: 20)),
+                            if (widget.goal.userOwner.id == _authUserId)
+                              TextButton(
+                                  style: ButtonStyle(
+                                      padding:
+                                          MaterialStateProperty.all<EdgeInsets>(
+                                              const EdgeInsets.all(10)),
+                                      foregroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.white),
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              baseColor),
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0)))),
+                                  onPressed: () => showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      context: context,
+                                      builder: (context) {
+                                        return FractionallySizedBox(
+                                          heightFactor: 0.7,
+                                          child: CreateGoalPostScreen(
+                                              goal: widget.goal),
+                                        );
+                                      }),
+                                  child: const Icon(Icons.add))
+                          ]),
                     ),
                   ),
                   if (Provider.of<ProgressPostsProvider>(context).posts.isEmpty)

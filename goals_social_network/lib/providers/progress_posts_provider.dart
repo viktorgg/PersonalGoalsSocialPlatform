@@ -12,9 +12,9 @@ class ProgressPostsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-// void deleteGoal(Goal goal) {
-//   goalsOwned.remove(goal);
-//   GoalServices.deleteGoal(goal.id);
-//   notifyListeners();
-// }
+  void deletePost(GoalPost post) {
+    posts.remove(post);
+    GoalPostServices.deleteGoalPost(post.id);
+    notifyListeners();
+  }
 }

@@ -37,6 +37,8 @@ class GoalPostReview {
     return {
       'comment': comment,
       'approved': approved,
+      'userOwner': userOwner,
+      'updatedAt': updatedAt,
     };
   }
 }
