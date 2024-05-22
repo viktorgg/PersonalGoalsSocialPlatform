@@ -12,7 +12,6 @@ class GoalsOwnedProvider extends ChangeNotifier {
   }
 
   void updateGoal(Goal goal) {
-    goal.toggle();
     GoalServices.updateGoal(goal);
     notifyListeners();
   }

@@ -88,11 +88,7 @@ class _SignInScreenState extends State<SignInScreen> {
           }
         });
       } else {
-        Flushbar(
-          title: "Invalid form!",
-          message: "Please Complete the form properly",
-          duration: const Duration(seconds: 10),
-        ).show(context);
+        invalidFormBar("Please complete the form properly").show(context);
       }
     }
 

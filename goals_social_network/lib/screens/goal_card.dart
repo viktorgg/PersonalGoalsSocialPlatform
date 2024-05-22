@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 import '../models/goal.dart';
 import '../providers/goals_owned_provider.dart';
 import '../services/globals.dart';
+import '../services/widgets.dart';
 
 class GoalCard extends StatelessWidget {
   final Goal goal;
@@ -14,30 +15,74 @@ class GoalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    showPopupMenu(BuildContext context, TapDownDetails details) {
+      showMenu<String>(
+        color: baseColor,
+        context: context,
+        position: RelativeRect.fromLTRB(
+            details.globalPosition.dx,
+            details.globalPosition.dy,
+            details.globalPosition.dx,
+            details.globalPosition.dy),
+        items: [
+          const PopupMenuItem<String>(
+              value: '1',
+              child:
+                  Text('Mark as Done', style: TextStyle(color: Colors.white))),
+          const PopupMenuItem<String>(
+              value: '2',
+              child: Text('Delete', style: TextStyle(color: Colors.white))),
+        ],
+        elevation: 8.0,
+      ).then((value) {
+        if (value == null) return;
+        if (value == "1") {
+          goal.toggle();
+          goalsData?.updateGoal(goal);
+        } else if (value == "2") {
+          goalsData?.deleteGoal(goal);
+          successActionBar("Goal deleted!").show(context);
+        }
+      });
+    }
+
     return Card(
+      elevation: 10,
+      surfaceTintColor: const Color.fromRGBO(223, 153, 240, 1.0),
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
           ListTile(
-              leading: const Icon(Icons.arrow_drop_down_circle),
-              title: Text(
-                  '${goal.userOwner.firstName} ${goal.userOwner.lastName}'),
-              subtitle: Text(timeAgo(goal.updatedAt)),
-              trailing: ModalRoute.of(context)?.settings.name == '/mygoals'
-                  ? IconButton(
-                      alignment: Alignment.topRight,
-                      onPressed: () {
-                        goalsData?.deleteGoal(goal);
-                      },
-                      icon: const Icon(Icons.close))
-                  : const SizedBox.shrink()),
+            leading: const CircleAvatar(
+              backgroundColor: Colors.grey,
+            ),
+            title:
+                Text('${goal.userOwner.firstName} ${goal.userOwner.lastName}'),
+            subtitle: Text(timeAgo(goal.updatedAt)),
+            trailing: ModalRoute.of(context)?.settings.name == '/mygoals'
+                ? GestureDetector(
+                    child: const Icon(Icons.more_vert),
+                    onTapDown: (details) => showPopupMenu(context, details),
+                  )
+                : const SizedBox.shrink(),
+            // ModalRoute.of(context)?.settings.name == '/mygoals'
+            //     ? IconButton(
+            //         alignment: Alignment.topRight,
+            //         onPressed: () {
+            //           goalsData?.deleteGoal(goal);
+            //           successActionBar("Goal deleted!").show(context);
+            //         },
+            //         icon: const Icon(Icons.close))
+            //     : const SizedBox.shrink(),
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
               goal.title,
               style: TextStyle(
-                color: Colors.black.withOpacity(0.6),
-              ),
+                  fontSize: 25,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black.withOpacity(0.8)),
             ),
           ),
           Padding(
@@ -45,7 +90,8 @@ class GoalCard extends StatelessWidget {
             child: Text(
               goal.description,
               style: TextStyle(
-                color: Colors.black.withOpacity(0.6),
+                fontSize: 18,
+                color: Colors.black.withOpacity(0.7),
               ),
             ),
           ),
@@ -74,8 +120,8 @@ class GoalCard extends StatelessWidget {
               ),
               Text(
                 'Progress updates: ${goal.progressPosts.length}',
-                style:
-                    TextStyle(color: Colors.black.withOpacity(1), fontSize: 15),
+                style: TextStyle(
+                    color: Colors.black.withOpacity(0.7), fontSize: 15),
               ),
             ],
           ),

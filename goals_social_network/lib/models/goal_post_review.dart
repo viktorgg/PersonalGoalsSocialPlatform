@@ -2,8 +2,8 @@ import 'package:goals_social_network/models/user.dart';
 
 class GoalPostReview {
   final int id;
-  final String comment;
-  final bool approved;
+  String comment;
+  bool approved;
   final User userOwner;
   final DateTime updatedAt;
 
@@ -14,6 +14,14 @@ class GoalPostReview {
     required this.userOwner,
     required this.updatedAt,
   });
+
+  set setComment(String comment) {
+    this.comment = comment;
+  }
+
+  set setApproved(bool approved) {
+    this.approved = approved;
+  }
 
   factory GoalPostReview.fromMap(Map goalPostReviewMap) {
     return GoalPostReview(
@@ -37,8 +45,7 @@ class GoalPostReview {
     return {
       'comment': comment,
       'approved': approved,
-      'userOwner': userOwner,
-      'updatedAt': updatedAt,
+      'userOwner': userOwner.toMap(),
     };
   }
 }

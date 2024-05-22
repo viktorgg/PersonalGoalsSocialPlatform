@@ -4,9 +4,15 @@ class User {
   final String firstName;
   final String lastName;
   final String phone;
+
   //final String profileImageUrl;
 
-  const User({required this.id, required this.firstName, required this.lastName, required this.email, required this.phone});
+  const User(
+      {required this.id,
+      required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.phone});
 
   factory User.fromMap(Map userMap) {
     return User(
@@ -16,5 +22,14 @@ class User {
       email: userMap['email'],
       phone: userMap['phone'],
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'phone': phone,
+    };
   }
 }

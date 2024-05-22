@@ -1,12 +1,11 @@
 import 'dart:io';
 
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:goals_social_network/models/goal.dart';
 import 'package:goals_social_network/providers/progress_posts_provider.dart';
+import 'package:goals_social_network/services/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../services/globals.dart';
 
@@ -29,12 +28,22 @@ class CreateGoalPostScreen extends StatefulWidget {
 class _CreateGoalPostScreenState extends State<CreateGoalPostScreen> {
   String _postDescription = "";
 
-  MediaType _mediaType = MediaType.image;
   String? imagePath;
   List<XFile> filesAttached = [];
 
   @override
   Widget build(BuildContext context) {
+    createProgressPost() {
+      if (_postDescription.isNotEmpty) {
+        Provider.of<ProgressPostsProvider>(context, listen: false)
+            .createPost(_postDescription, widget.goal);
+        Navigator.pop(context);
+        successActionBar("Progress posted!").show(context);
+      } else {
+        invalidFormBar("Description needs to be filled").show(context);
+      }
+    }
+
     return Container(
         padding: const EdgeInsets.all(25.0),
         child: Column(
@@ -45,9 +54,9 @@ class _CreateGoalPostScreenState extends State<CreateGoalPostScreen> {
                   'Post new update on your Progress',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 30,
-                    color: baseColor,
-                  ),
+                      fontSize: 30,
+                      color: baseColor,
+                      fontWeight: FontWeight.w500),
                 ),
               ),
               Expanded(
@@ -60,30 +69,20 @@ class _CreateGoalPostScreenState extends State<CreateGoalPostScreen> {
                     _postDescription = val;
                   },
                 ),
-                TextButton(
-                  onPressed: () {
-                    showCameraOrGalleyModal();
-                    setState(() {
-                      _mediaType = MediaType.image;
-                    });
-                  },
-                  style: TextButton.styleFrom(backgroundColor: baseColor),
-                  child: const Text(
-                    'Attach Image',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    showCameraOrGalleyModal();
-                    setState(() {
-                      _mediaType = MediaType.video;
-                    });
-                  },
-                  style: TextButton.styleFrom(backgroundColor: baseColor),
-                  child: const Text(
-                    'Attach Video',
-                    style: TextStyle(color: Colors.white),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: TextButton(
+                    onPressed: () {
+                      showCameraOrGalleyModal();
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: baseColor, width: 2),
+                    ),
+                    child: const Text(
+                      'Attach Image',
+                      style: TextStyle(color: baseColor),
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -91,11 +90,7 @@ class _CreateGoalPostScreenState extends State<CreateGoalPostScreen> {
                 ),
                 (imagePath != null)
                     ? Image.file(File(imagePath!))
-                    : Container(
-                        width: 300,
-                        height: 300,
-                        color: Colors.grey[300]!,
-                      ),
+                    : const SizedBox.shrink(),
                 if (filesAttached.isNotEmpty)
                   const Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -116,72 +111,31 @@ class _CreateGoalPostScreenState extends State<CreateGoalPostScreen> {
                             child: Center(child: Text(filesAttached[i].name)),
                           ));
                     }),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: TextButton(
-                    onPressed: () {
-                      if (_postDescription.isNotEmpty) {
-                        Provider.of<ProgressPostsProvider>(context,
-                                listen: false)
-                            .createPost(_postDescription, widget.goal);
-                        Navigator.pop(context);
-                        Flushbar(
-                          title: "Action",
-                          message: "Progress posted!",
-                          isDismissible: true,
-                          duration: const Duration(seconds: 5),
-                          backgroundColor: baseColor,
-                          messageColor: Colors.white,
-                          messageSize: 20,
-                        ).show(context);
-                      }
-                    },
-                    style: TextButton.styleFrom(backgroundColor: baseColor),
-                    child: const Text(
-                      'Add',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
+                longButtons('Post Progress', createProgressPost)
               ]))
             ]));
   }
 
   void pickMedia(ImageSource source) async {
     XFile? file;
-    if (_mediaType == MediaType.image) {
-      file = await ImagePicker().pickImage(source: source);
-    } else {
-      file = await ImagePicker().pickVideo(source: source);
-    }
+    file = await ImagePicker().pickImage(source: source);
     if (file != null) {
       imagePath = file.path;
-      if (_mediaType == MediaType.video) {
-        imagePath = await VideoThumbnail.thumbnailFile(
-            video: file.path,
-            imageFormat: ImageFormat.PNG,
-            quality: 100,
-            maxWidth: 300,
-            maxHeight: 300);
-      }
       filesAttached.add(file);
       setState(() {});
     }
   }
 
   void showCameraOrGalleyModal() {
-    showModalBottomSheet<dynamic>(
+    showModalBottomSheet(
         isScrollControlled: true,
         context: context,
         builder: (context) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Wrap(
-                crossAxisAlignment: WrapCrossAlignment.start,
-                direction: Axis.vertical,
-                children: [
-                  TextButton(
+          return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Wrap(direction: Axis.vertical, children: [
+              SizedBox(
+                  width: 300,
+                  child: TextButton(
                     onPressed: () {
                       pickMedia(ImageSource.camera);
                       Navigator.of(context, rootNavigator: true).pop();
@@ -191,22 +145,23 @@ class _CreateGoalPostScreenState extends State<CreateGoalPostScreen> {
                       'Camera',
                       style: TextStyle(color: Colors.white),
                     ),
+                  )),
+              SizedBox(
+                width: 300,
+                child: TextButton(
+                  onPressed: () {
+                    pickMedia(ImageSource.gallery);
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                  style: TextButton.styleFrom(backgroundColor: baseColor),
+                  child: const Text(
+                    'Gallery',
+                    style: TextStyle(color: Colors.white),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      pickMedia(ImageSource.gallery);
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                    style: TextButton.styleFrom(backgroundColor: baseColor),
-                    child: const Text(
-                      'Gallery',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          );
+                ),
+              ),
+            ])
+          ]);
         });
   }
 }

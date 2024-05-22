@@ -53,19 +53,24 @@ class GoalServices {
       goals.add(Goal.fromMap(element));
     }
 
+    goals.sort((a, b) {
+      var date1 = a.updatedAt;
+      var date2 = b.updatedAt;
+      return date2.compareTo(date1);
+    });
     return goals;
   }
 
-  static Future<Response> updateGoal(Goal task) async {
-    var id = task.id;
-    var url = Uri.parse('$goalsURL/update/$id');
+  static Future<Response> updateGoal(Goal goal) async {
+    var id = goal.id;
+    var url = Uri.parse('$goalsURL/edit/$id');
     var token = await AuthUserServices.getToken();
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: 'Bearer $token',
     };
     headers.addAll(header);
     Response response =
-        await put(url, headers: headers, body: json.encode(task.toMap()));
+        await put(url, headers: headers, body: json.encode(goal.toMap()));
     print(response.body);
     return response;
   }

@@ -20,8 +20,6 @@ class GoalPostReviewServices {
       "byUserId": currentUser.userId,
     };
 
-    print(data);
-
     var token = await AuthUserServices.getToken();
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -34,6 +32,20 @@ class GoalPostReviewServices {
     GoalPostReview goalPostReview = GoalPostReview.fromMap(responseMap);
 
     return goalPostReview;
+  }
+
+  static Future<Response> updateGoalPostReview(GoalPostReview review) async {
+    var id = review.id;
+    var url = Uri.parse('$postReviewsURL/edit/$id');
+    var token = await AuthUserServices.getToken();
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+    };
+    headers.addAll(header);
+    Response response =
+        await put(url, headers: headers, body: json.encode(review.toMap()));
+
+    return response;
   }
 
   static Future<List<GoalPostReview>> getGoalPostReviews(
@@ -61,5 +73,17 @@ class GoalPostReviewServices {
       return date2.compareTo(date1);
     });
     return goalPostReviews;
+  }
+
+  static Future<Response> deleteGoalPostReview(int id) async {
+    var url = Uri.parse('$postReviewsURL/$id');
+    var token = await AuthUserServices.getToken();
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+    };
+    headers.addAll(header);
+    Response response = await delete(url, headers: headers);
+
+    return response;
   }
 }

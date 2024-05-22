@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:goals_social_network/screens/create_goal_screen.dart';
 import 'package:goals_social_network/screens/goal_card.dart';
 import 'package:goals_social_network/services/user_services.dart';
 import 'package:provider/provider.dart';
@@ -77,7 +78,7 @@ class _MyGoalsScreenState extends State<MyGoalsScreen> {
                         Goal? goal = goalsData.goalsOwned[index];
                         return GoalCard(
                           goal: goal,
-                          //goalsData: goalsData,
+                          goalsData: goalsData,
                         );
                       });
                 })),
@@ -92,9 +93,12 @@ class _MyGoalsScreenState extends State<MyGoalsScreen> {
                     isScrollControlled: true,
                     context: context,
                     builder: (context) {
-                      return const FractionallySizedBox(
-                        heightFactor: 0.6,
-                        //child: CreateGoalPostScreen(),
+                      return AnimatedPadding(
+                        duration: const Duration(milliseconds: 150),
+                        curve: Curves.easeOut,
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                        child: const CreateGoalScreen(),
                       );
                     });
               },

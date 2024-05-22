@@ -53,6 +53,19 @@ public class GoalPostReviewController {
         return new ResponseEntity<>("Goal post with ID %s is not found".formatted(goalPostId), HttpStatus.BAD_REQUEST);
     }
 
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<?> editGoalPostReview(@PathVariable Long id, @RequestBody GoalPostReview goalPostReview) {
+        boolean exists = goalPostReviewRepository.existsById(id);
+        if (exists) {
+            GoalPostReview reviewToUpdate = goalPostReviewRepository.getReferenceById(id);
+            reviewToUpdate.setApproved(goalPostReview.isApproved());
+            reviewToUpdate.setComment(goalPostReview.getComment());
+            goalPostReviewRepository.save(reviewToUpdate);
+            return new ResponseEntity<>(reviewToUpdate.toMap(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Goal with ID %s is not found".formatted(id), HttpStatus.BAD_REQUEST);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteGoalPostReview(@PathVariable Long id) {
         boolean exists = goalPostReviewRepository.existsById(id);

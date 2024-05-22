@@ -27,7 +27,9 @@ class Goal {
       description: goalMap['description'],
       done: goalMap['done'],
       updatedAt: DateTime.parse(goalMap['updatedAt']),
-      progressPosts: GoalPost.fromMapList(goalMap['progressPosts']),
+      progressPosts: goalMap['progressPosts'] == null
+          ? []
+          : GoalPost.fromMapList(goalMap['progressPosts']),
       userOwner: User.fromMap(goalMap['userOwner']),
     );
   }
@@ -38,7 +40,6 @@ class Goal {
       'description': description,
       'done': done,
       'progressPosts': progressPosts,
-      'updatedAt': updatedAt,
     };
   }
 

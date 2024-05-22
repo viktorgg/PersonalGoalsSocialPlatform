@@ -51,7 +51,14 @@ public class Goal {
     }
 
     public Map<String, Object> toMap() {
-        return Map.of("id", id, "title", title, "description", description, "done", done, "userOwner", userOwner.toMap());
+        return Map.of(
+                "id", id,
+                "title", title,
+                "description", description,
+                "done", done,
+                "userOwner", userOwner.toMap(),
+                "updatedAt", updatedAt
+        );
     }
 
     @JsonIncludeProperties(value = {"id", "firstName", "lastName", "email", "phone"})

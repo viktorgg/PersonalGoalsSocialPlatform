@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:goals_social_network/services/auth_user_services.dart';
 import 'package:http/http.dart';
 
@@ -89,6 +88,11 @@ class UserServices {
       goals.add(Goal.fromMap(element));
     }
 
+    goals.sort((a, b) {
+      var date1 = a.updatedAt;
+      var date2 = b.updatedAt;
+      return date2.compareTo(date1);
+    });
     return goals;
   }
 

@@ -55,7 +55,11 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
           )
         : Scaffold(
             appBar: AppBar(
-              title: const Text("Goal details"),
+              title: const Text("Goal details",
+                  style: TextStyle(color: Colors.white)),
+              // centerTitle: true,
+              backgroundColor: baseColor,
+              iconTheme: const IconThemeData(color: Colors.white),
               actions: [
                 InkWell(
                   onTap: () {
@@ -67,138 +71,144 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
                   },
                   child: const Icon(
                     Icons.arrow_back,
-                    color: Colors.black,
                   ),
                 )
               ],
             ),
-            body: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Card(
-                    elevation: 10,
-                    clipBehavior: Clip.antiAlias,
-                    child: Column(
-                      children: [
-                        ListTile(
-                          leading: const Icon(Icons.arrow_drop_down_circle),
-                          title: Text(
-                              '${widget.goal.userOwner.firstName} ${widget.goal.userOwner.lastName}'),
-                          subtitle: Text(timeAgo(widget.goal.updatedAt)),
-                          // trailing: IconButton(
-                          //     alignment: Alignment.topRight,
-                          //     onPressed: () {
-                          //       goalsData?.deleteGoal(goal);
-                          //     },
-                          //     icon: const Icon(Icons.close)),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            widget.goal.title,
-                            style: TextStyle(
-                              color: Colors.black.withOpacity(0.6),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            widget.goal.description,
-                            style: TextStyle(
-                              color: Colors.black.withOpacity(0.6),
-                            ),
-                          ),
-                        ),
-                        ButtonBar(
-                          alignment: MainAxisAlignment.start,
+            body: Container(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Card(
+                        elevation: 30,
+                        surfaceTintColor:
+                            const Color.fromRGBO(223, 153, 240, 1.0),
+                        clipBehavior: Clip.antiAlias,
+                        child: Column(
                           children: [
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.only(left: 0.0),
-                              ),
-                              onPressed: () {
-                                // Share.share(
-                                //     'check out my website https://example.com',
-                                //     subject: 'Look what I made!');
-                              },
-                              child: const Text('Share'),
+                            ListTile(
+                              leading: const Icon(Icons.arrow_drop_down_circle),
+                              title: Text(
+                                  '${widget.goal.userOwner.firstName} ${widget.goal.userOwner.lastName}'),
+                              subtitle: Text(timeAgo(widget.goal.updatedAt)),
+                              // trailing: IconButton(
+                              //     alignment: Alignment.topRight,
+                              //     onPressed: () {
+                              //       goalsData?.deleteGoal(goal);
+                              //     },
+                              //     icon: const Icon(Icons.close)),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                widget.goal.title,
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black.withOpacity(0.8)),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                widget.goal.description,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                              ),
+                            ),
+                            ButtonBar(
+                              alignment: MainAxisAlignment.start,
+                              children: [
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    padding: const EdgeInsets.only(left: 0.0),
+                                  ),
+                                  onPressed: () {
+                                    // Share.share(
+                                    //     'check out my website https://example.com',
+                                    //     subject: 'Look what I made!');
+                                  },
+                                  child: const Text('Share'),
+                                ),
+                              ],
+                            ),
+                            //Image.asset('assets/card-sample-image.jpg'),
+                            //Image.asset('assets/card-sample-image-2.jpg'),
                           ],
                         ),
-                        //Image.asset('assets/card-sample-image.jpg'),
-                        //Image.asset('assets/card-sample-image-2.jpg'),
-                      ],
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Progress",
-                                style: TextStyle(
-                                    color: Colors.black.withOpacity(1),
-                                    fontSize: 20)),
-                            if (widget.goal.userOwner.id == _authUserId)
-                              TextButton(
-                                  style: ButtonStyle(
-                                      padding:
-                                          MaterialStateProperty.all<EdgeInsets>(
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Progress",
+                                    style: TextStyle(
+                                        color: Colors.black.withOpacity(1),
+                                        fontSize: 20)),
+                                if (widget.goal.userOwner.id == _authUserId)
+                                  TextButton(
+                                      style: ButtonStyle(
+                                          padding: MaterialStateProperty.all<EdgeInsets>(
                                               const EdgeInsets.all(10)),
-                                      foregroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              Colors.white),
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              baseColor),
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0)))),
-                                  onPressed: () => showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      context: context,
-                                      builder: (context) {
-                                        return FractionallySizedBox(
-                                          heightFactor: 0.7,
-                                          child: CreateGoalPostScreen(
-                                              goal: widget.goal),
-                                        );
-                                      }),
-                                  child: const Icon(Icons.add))
-                          ]),
-                    ),
-                  ),
-                  if (Provider.of<ProgressPostsProvider>(context).posts.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        'This goal currently has no progress updates\n:(',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.6),
+                                          foregroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.white),
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  baseColor),
+                                          shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10.0)))),
+                                      onPressed: () => showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          context: context,
+                                          builder: (context) {
+                                            return FractionallySizedBox(
+                                              heightFactor: 0.6,
+                                              child: CreateGoalPostScreen(
+                                                  goal: widget.goal),
+                                            );
+                                          }),
+                                      child: const Icon(Icons.add))
+                              ]),
                         ),
                       ),
-                    )
-                  else
-                    Expanded(child: Consumer<ProgressPostsProvider>(
-                        builder: (context, postsData, child) {
-                      return ListView.builder(
-                          // controller: scroll,
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.all(0.0),
-                          itemCount: postsData.posts.length,
-                          itemBuilder: (context, i) {
-                            return GoalProgressPostTile(
-                                post: postsData.posts[i],
-                                index: i,
-                                userOwner: widget.goal.userOwner);
-                          });
-                    }))
-                ]));
+                      if (Provider.of<ProgressPostsProvider>(context)
+                          .posts
+                          .isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            'This goal currently has no progress updates\n:(',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.black.withOpacity(0.6),
+                            ),
+                          ),
+                        )
+                      else
+                        Expanded(child: Consumer<ProgressPostsProvider>(
+                            builder: (context, postsData, child) {
+                          return ListView.builder(
+                              // controller: scroll,
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.all(0.0),
+                              itemCount: postsData.posts.length,
+                              itemBuilder: (context, i) {
+                                return GoalProgressPostTile(
+                                    post: postsData.posts[i],
+                                    index: i,
+                                    userOwner: widget.goal.userOwner);
+                              });
+                        }))
+                    ])));
   }
 }

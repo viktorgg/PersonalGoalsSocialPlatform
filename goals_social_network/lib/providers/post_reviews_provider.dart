@@ -14,9 +14,14 @@ class PostReviewsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-// void deleteGoal(Goal goal) {
-//   goalsOwned.remove(goal);
-//   GoalServices.deleteGoal(goal.id);
-//   notifyListeners();
-// }
+  void updateReview(GoalPostReview review) {
+    GoalPostReviewServices.updateGoalPostReview(review);
+    notifyListeners();
+  }
+
+  void deleteReview(GoalPostReview review) {
+    reviews.remove(review);
+    GoalPostReviewServices.deleteGoalPostReview(review.id);
+    notifyListeners();
+  }
 }

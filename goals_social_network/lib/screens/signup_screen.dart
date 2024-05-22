@@ -18,7 +18,14 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final formKey = GlobalKey<FormState>();
 
+  final passwordFieldController = TextEditingController();
   late String _firstName, _lastName, _email, _password, _phone;
+
+  @override
+  void dispose() {
+    passwordFieldController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,16 +65,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
 
     final passwordField = TextFormField(
+      controller: passwordFieldController,
       autofocus: false,
       obscureText: true,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Please enter password";
-        } else {
-          _password = value;
-          return null;
-        }
-      },
+      validator: (value) =>
+          value!.isEmpty ? "Please enter your password" : null,
       onSaved: (value) => _password = value!,
       decoration: buildInputDecoration("Enter password", Icons.lock),
     );
@@ -76,7 +78,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       autofocus: false,
       obscureText: true,
       validator: (value) =>
-          value! != _password ? "Passwords don't match!" : null,
+          value!.isEmpty || value != passwordFieldController.text
+              ? "Passwords don't match"
+              : null,
       onSaved: (value) => _password = value!,
       decoration: buildInputDecoration("Confirm password", Icons.lock),
     );
@@ -125,11 +129,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           }
         });
       } else {
-        Flushbar(
-          title: "Invalid form!",
-          message: "Please complete the form properly",
-          duration: const Duration(seconds: 10),
-        ).show(context);
+        invalidFormBar("Please complete the form properly").show(context);
       }
     }
 
