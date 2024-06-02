@@ -77,13 +77,19 @@ class _ViewFriendsScreenState extends State<ViewFriendsScreen> {
       items: [
         const PopupMenuItem<String>(
             value: '1',
-            child: Text('View goals', style: TextStyle(color: Colors.white))),
+            child: Center(
+                child:
+                    Text('View goals', style: TextStyle(color: Colors.white)))),
         const PopupMenuItem<String>(
             value: '2',
-            child: Text('Unfollow', style: TextStyle(color: Colors.white))),
+            child: Center(
+                child:
+                    Text('Unfollow', style: TextStyle(color: Colors.white)))),
         const PopupMenuItem<String>(
             value: '3',
-            child: Text('View profile', style: TextStyle(color: Colors.white))),
+            child: Center(
+                child: Text('View profile',
+                    style: TextStyle(color: Colors.white)))),
       ],
       elevation: 8.0,
     ).then((value) {

@@ -52,7 +52,7 @@ public class GoalProgressPost {
         );
     }
 
-    @JsonIncludeProperties(value = {"id", "title", "description", "done"})
+    @JsonIncludeProperties(value = {"id", "title", "description", "done", "status"})
     @ManyToOne()
     @JoinColumn(name="goal_id", referencedColumnName = "id", nullable = false)
     private Goal goal;

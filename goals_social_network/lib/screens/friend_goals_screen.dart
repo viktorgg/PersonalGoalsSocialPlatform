@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:goals_social_network/screens/common_app_bar.dart';
 import 'package:goals_social_network/screens/goal_card.dart';
 import 'package:goals_social_network/services/user_services.dart';
 import 'package:provider/provider.dart';
@@ -6,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../models/goal.dart';
 import '../models/user.dart';
 import '../providers/goals_owned_provider.dart';
-import '../services/globals.dart';
 
 class FriendGoalsScreen extends StatefulWidget {
   final User user;
@@ -39,24 +39,9 @@ class _FriendGoalsScreenState extends State<FriendGoalsScreen> {
               child: CircularProgressIndicator(),
             ),
           )
-        : Scaffold(
-            appBar: AppBar(
-              title: Text(
-                  'Goals of ${widget.user.firstName} ${widget.user.lastName} (${_goals?.length})',
-                  style: const TextStyle(color: Colors.white)),
-              centerTitle: true,
-              backgroundColor: baseColor,
-              iconTheme: const IconThemeData(color: Colors.white),
-              leading: InkWell(
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, '/feed');
-                },
-                child: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+        : CommonAppBar(
+            title: 'Friend Goals',
+            floatingActionButton: null,
             body: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Consumer<GoalsOwnedProvider>(

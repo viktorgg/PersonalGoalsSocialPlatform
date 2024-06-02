@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:goals_social_network/models/auth_user.dart';
 import 'package:goals_social_network/models/goal_post.dart';
 import 'package:goals_social_network/providers/progress_posts_provider.dart';
+import 'package:goals_social_network/screens/common_app_bar.dart';
 import 'package:goals_social_network/screens/goal_progress_post_tile.dart';
 import 'package:goals_social_network/services/globals.dart';
 import 'package:goals_social_network/services/goal_post_services.dart';
@@ -53,28 +54,9 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
               child: CircularProgressIndicator(),
             ),
           )
-        : Scaffold(
-            appBar: AppBar(
-              title: const Text("Goal details",
-                  style: TextStyle(color: Colors.white)),
-              // centerTitle: true,
-              backgroundColor: baseColor,
-              iconTheme: const IconThemeData(color: Colors.white),
-              actions: [
-                InkWell(
-                  onTap: () {
-                    if (widget.goal.userOwner.id == _authUserId) {
-                      Navigator.pushReplacementNamed(context, '/mygoals');
-                    } else {
-                      Navigator.pushReplacementNamed(context, '/feed');
-                    }
-                  },
-                  child: const Icon(
-                    Icons.arrow_back,
-                  ),
-                )
-              ],
-            ),
+        : CommonAppBar(
+            title: 'Goal Details',
+            floatingActionButton: null,
             body: Container(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
@@ -88,7 +70,9 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
                         child: Column(
                           children: [
                             ListTile(
-                              leading: const Icon(Icons.arrow_drop_down_circle),
+                              leading: const CircleAvatar(
+                                backgroundColor: Colors.grey,
+                              ),
                               title: Text(
                                   '${widget.goal.userOwner.firstName} ${widget.goal.userOwner.lastName}'),
                               subtitle: Text(timeAgo(widget.goal.updatedAt)),

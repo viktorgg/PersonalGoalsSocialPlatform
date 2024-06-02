@@ -25,20 +25,31 @@ class GoalCard extends StatelessWidget {
             details.globalPosition.dx,
             details.globalPosition.dy),
         items: [
-          const PopupMenuItem<String>(
+          PopupMenuItem<String>(
+              padding: const EdgeInsets.all(4),
               value: '1',
-              child:
-                  Text('Mark as Done', style: TextStyle(color: Colors.white))),
+              child: Center(
+                  child: Text(
+                      goal.done == false
+                          ? 'Mark as Done'
+                          : 'Mark as In Progress',
+                      style: const TextStyle(color: Colors.white)))),
           const PopupMenuItem<String>(
               value: '2',
-              child: Text('Delete', style: TextStyle(color: Colors.white))),
+              child: Center(
+                  child:
+                      Text('Delete', style: TextStyle(color: Colors.white)))),
         ],
         elevation: 8.0,
       ).then((value) {
         if (value == null) return;
         if (value == "1") {
-          goal.toggle();
+          goal.toggleStatus();
           goalsData?.updateGoal(goal);
+          String msg = goal.done == true
+              ? "Goal marked as Done!"
+              : "Goal marked as In Progress!";
+          successActionBar(msg).show(context);
         } else if (value == "2") {
           goalsData?.deleteGoal(goal);
           successActionBar("Goal deleted!").show(context);

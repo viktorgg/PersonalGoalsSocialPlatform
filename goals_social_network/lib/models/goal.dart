@@ -6,6 +6,7 @@ class Goal {
   final String title;
   final String description;
   bool done;
+  final int status;
   final User userOwner;
   final DateTime updatedAt;
   final List<GoalPost> progressPosts;
@@ -15,6 +16,7 @@ class Goal {
     required this.title,
     required this.description,
     required this.done,
+    required this.status,
     required this.userOwner,
     required this.updatedAt,
     required this.progressPosts,
@@ -26,6 +28,7 @@ class Goal {
       title: goalMap['title'],
       description: goalMap['description'],
       done: goalMap['done'],
+      status: goalMap['status'],
       updatedAt: DateTime.parse(goalMap['updatedAt']),
       progressPosts: goalMap['progressPosts'] == null
           ? []
@@ -39,11 +42,10 @@ class Goal {
       'title': title,
       'description': description,
       'done': done,
-      'progressPosts': progressPosts,
     };
   }
 
-  void toggle() {
+  void toggleStatus() {
     done = !done;
   }
 }

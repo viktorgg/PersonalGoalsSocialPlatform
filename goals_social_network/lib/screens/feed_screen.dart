@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:goals_social_network/screens/account_drawer_screen.dart';
+import 'package:goals_social_network/screens/common_app_bar.dart';
 import 'package:goals_social_network/screens/goal_card.dart';
-import 'package:goals_social_network/screens/view_friends_screen.dart';
 import 'package:goals_social_network/services/user_services.dart';
 
 import '../models/goal.dart';
 import '../models/user.dart';
 import '../services/globals.dart';
-import '../services/widgets.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
@@ -46,74 +44,8 @@ class _FeedScreenState extends State<FeedScreen> {
               child: CircularProgressIndicator(),
             ),
           )
-        : Scaffold(
-            drawer: const Drawer(child: ViewFriendsScreen()),
-            endDrawer: const Drawer(child: AccountDrawerScreen()),
-            appBar: AppBar(
-              title: const Text('Feed', style: TextStyle(color: Colors.white)),
-              centerTitle: true,
-              backgroundColor: baseColor,
-              iconTheme: const IconThemeData(color: Colors.white),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  tooltip: 'Search for users',
-                  onPressed: () {
-                    _apiSearchResult.clear();
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return Scaffold(
-                              body: Column(
-                            children: [
-                              SizedBox(
-                                height: 45,
-                                width: 360,
-                                child: TextField(
-                                    onChanged: _handleSearch,
-                                    decoration: buildInputDecoration(
-                                        'Search for users', Icons.search)),
-                              ),
-                              Expanded(
-                                  child: ListView.builder(
-                                      shrinkWrap: true,
-                                      padding: const EdgeInsets.all(0.0),
-                                      itemCount: _apiSearchResult.length,
-                                      itemBuilder: (context, i) {
-                                        return ListTile(
-                                          leading: const CircleAvatar(
-                                            backgroundColor: Colors.grey,
-                                            //backgroundImage: new NetworkImage(friendsModel.profileImageUrl),
-                                          ),
-                                          title: Text(
-                                              '${_apiSearchResult[i].firstName} ${_apiSearchResult[i].lastName}'),
-                                          onTap: () {
-                                            setState(() {});
-                                          },
-                                          trailing: GestureDetector(
-                                            child: const Icon(Icons.settings),
-                                            onTapDown: (details) =>
-                                                showPopupMenu(context, details,
-                                                    _apiSearchResult[i]),
-                                          ),
-                                        );
-                                      })),
-                            ],
-                          ));
-                        });
-                  },
-                ),
-                Builder(
-                  builder: (context) => IconButton(
-                    icon: const Icon(Icons.account_circle_outlined),
-                    tooltip: 'Profile settings',
-                    onPressed: () {
-                      Scaffold.of(context).openEndDrawer();
-                    },
-                  ),
-                )
-              ],
-            ),
+        : CommonAppBar(
+            title: 'Feed',
             body: Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -126,6 +58,7 @@ class _FeedScreenState extends State<FeedScreen> {
                         //goalsData: null,
                       );
                     })),
+            floatingActionButton: null,
           );
   }
 

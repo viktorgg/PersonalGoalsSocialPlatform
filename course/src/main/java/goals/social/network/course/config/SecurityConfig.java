@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import goals.social.network.course.filters.JwtAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -51,9 +52,15 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/signup", "/signin").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/test/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/test/**", "/signout").permitAll()
                         .anyRequest().authenticated()
                 )
+//                .logout(config -> config.logoutUrl("/signout")
+//                        .logoutSuccessUrl("/logoutSuccess")
+//                        .deleteCookies("JSESSIONID")
+//                        .invalidateHttpSession(true)
+//                        .clearAuthentication(true)
+//                        .permitAll())
                 .authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

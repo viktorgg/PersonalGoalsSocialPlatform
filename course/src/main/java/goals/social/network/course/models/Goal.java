@@ -35,6 +35,9 @@ public class Goal {
     @Column(nullable = false)
     private Boolean done;
 
+    @Column(nullable = false)
+    private int status;
+
     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -56,6 +59,7 @@ public class Goal {
                 "title", title,
                 "description", description,
                 "done", done,
+                "status", status,
                 "userOwner", userOwner.toMap(),
                 "updatedAt", updatedAt
         );
