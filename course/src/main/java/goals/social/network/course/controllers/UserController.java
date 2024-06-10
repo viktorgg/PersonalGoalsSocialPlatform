@@ -5,6 +5,7 @@ import goals.social.network.course.models.User;
 import goals.social.network.course.models.UserRelations;
 import goals.social.network.course.repositories.UserRepository;
 import goals.social.network.course.repositories.UserRelationsRepository;
+import goals.social.network.course.services.GoalService;
 import goals.social.network.course.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ public class UserController {
     private final UserRepository userRepository;
     private final UserRelationsRepository relationsRepository;
 
+    private final GoalService goalService;
     private final UserService userService;
 
     @GetMapping("{userId}/rel")
@@ -40,7 +42,8 @@ public class UserController {
     public ResponseEntity<?> getUserGoalsOwned(@PathVariable Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
-            return new ResponseEntity<>(user.get().getGoalsOwned(), HttpStatus.OK);
+            List<Goal> goalsOwned = goalService.calculateGoalStatuses(user.get().getGoalsOwned());
+            return new ResponseEntity<>(goalsOwned, HttpStatus.OK);
         }
         return new ResponseEntity<>("User with ID %s is not found".formatted(userId), HttpStatus.BAD_REQUEST);
     }
@@ -49,7 +52,7 @@ public class UserController {
     public ResponseEntity<?> getUserGoalsFollowed(@PathVariable Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
-            List<Goal> goalsFollowed = userService.getUserGoalsFollowed(user.get());
+            List<Goal> goalsFollowed = goalService.calculateGoalStatuses(userService.getUserGoalsFollowed(user.get()));
             return new ResponseEntity<>(goalsFollowed, HttpStatus.OK);
         }
         return new ResponseEntity<>("User with ID %s is not found".formatted(userId), HttpStatus.BAD_REQUEST);

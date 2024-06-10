@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_choice_chip/flutter_3d_choice_chip.dart';
 import 'package:goals_social_network/models/goal_post_review.dart';
-import 'package:goals_social_network/providers/post_reviews_provider.dart';
+import 'package:goals_social_network/providers/goal_provider.dart';
+import 'package:goals_social_network/services/goal_post_review_services.dart';
 import 'package:goals_social_network/services/widgets.dart';
 import 'package:provider/provider.dart';
 
+import '../models/goal.dart';
 import '../models/goal_post.dart';
 import '../services/globals.dart';
 
 class CreateUpdatePostReviewScreen extends StatefulWidget {
-  final GoalPost? post;
+  final Goal goal;
+  final GoalPost post;
   final GoalPostReview? oldReview;
   final ExpansionTileController tileController;
 
   const CreateUpdatePostReviewScreen(
       {super.key,
-      required this.tileController,
+      required this.goal,
       required this.oldReview,
-      required this.post});
+      required this.post,
+      required this.tileController});
 
   @override
   State<StatefulWidget> createState() {
@@ -43,22 +47,25 @@ class _CreateUpdatePostReviewScreenState
 
   @override
   Widget build(BuildContext context) {
-    createReview() {
-      Provider.of<PostReviewsProvider>(context, listen: false)
-          .createReview(_isApproved, _comment, widget.post!);
+    popDrawer() {
+      Provider.of<GoalProvider>(context, listen: false).setGoal(widget.goal);
       widget.tileController.collapse();
-      Navigator.of(context, rootNavigator: true).pop();
-      successActionBar('Progress Review Posted').show(context);
-    }
-
-    updateReview() {
-      widget.oldReview?.setComment = _comment;
-      widget.oldReview?.setApproved = _isApproved;
-      Provider.of<PostReviewsProvider>(context, listen: false)
-          .updateReview(widget.oldReview!);
-      widget.tileController.collapse();
+      widget.tileController.expand();
       Navigator.of(context, rootNavigator: true).pop();
       successActionBar('Review Updated').show(context);
+    }
+
+    createReview() async {
+      GoalPostReviewServices.createGoalPostReview(
+              _isApproved, _comment, widget.post)
+          .then((value) => popDrawer());
+    }
+
+    updateReview() async {
+      widget.oldReview?.setComment = _comment;
+      widget.oldReview?.setApproved = _isApproved;
+      GoalPostReviewServices.updateGoalPostReview(widget.oldReview!)
+          .then((value) => popDrawer());
     }
 
     return Container(

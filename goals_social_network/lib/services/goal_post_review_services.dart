@@ -27,7 +27,6 @@ class GoalPostReviewServices {
     headers.addAll(header);
     Response response = await post(Uri.parse('$postReviewsURL/create'),
         headers: headers, body: json.encode(data));
-    print(response.body);
     Map responseMap = jsonDecode(response.body);
     GoalPostReview goalPostReview = GoalPostReview.fromMap(responseMap);
 
@@ -44,7 +43,6 @@ class GoalPostReviewServices {
     headers.addAll(header);
     Response response =
         await put(url, headers: headers, body: json.encode(review.toMap()));
-
     return response;
   }
 

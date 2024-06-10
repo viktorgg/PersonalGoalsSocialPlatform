@@ -15,8 +15,6 @@ class GoalPostServices {
       "goalId": goal.id,
     };
 
-    print(data);
-
     var token = await AuthUserServices.getToken();
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -24,7 +22,6 @@ class GoalPostServices {
     headers.addAll(header);
     Response response = await post(Uri.parse('$goalPostURL/create'),
         headers: headers, body: json.encode(data));
-    print(response.body);
     Map responseMap = jsonDecode(response.body);
     GoalPost goalPost = GoalPost.fromMap(responseMap);
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_glow/flutter_glow.dart';
 import 'package:goals_social_network/screens/view_friends_screen.dart';
 
 import '../models/user.dart';
@@ -12,11 +13,12 @@ class CommonAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Widget body;
   final FloatingActionButton? floatingActionButton;
 
-  const CommonAppBar(
-      {super.key,
-      required this.body,
-      required this.title,
-      required this.floatingActionButton});
+  const CommonAppBar({
+    super.key,
+    required this.body,
+    required this.title,
+    required this.floatingActionButton,
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -29,6 +31,10 @@ class CommonAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _CommonAppBarState extends State<CommonAppBar> {
   List<User> _apiSearchResult = [];
+
+  bool isFeedCurrentRoute() {
+    return ModalRoute.of(context)?.settings.name == '/feed' ? true : false;
+  }
 
   Future<void> _handleSearch(String input) async {
     _apiSearchResult = await UserServices.findUsersOnNameContaining(input);
@@ -84,10 +90,19 @@ class _CommonAppBarState extends State<CommonAppBar> {
             ),
             Flexible(
                 child: IconButton(
-              icon: const Icon(Icons.dynamic_feed),
+              icon: isFeedCurrentRoute()
+                  ? const GlowIcon(
+                      Icons.dynamic_feed,
+                      glowColor: Colors.white,
+                      size: 30,
+                      blurRadius: 20,
+                    )
+                  : const Icon(Icons.dynamic_feed),
               tooltip: 'Show feed',
               onPressed: () {
-                Navigator.pushReplacementNamed(context, '/feed');
+                if (!isFeedCurrentRoute()) {
+                  Navigator.pushReplacementNamed(context, '/feed');
+                }
               },
             ))
           ],

@@ -18,8 +18,6 @@ class GoalServices {
       "userId": currentUser.userId,
     };
 
-    print(data);
-
     var token = await AuthUserServices.getToken();
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -28,37 +26,22 @@ class GoalServices {
     Response response = await post(Uri.parse('$goalsURL/create'),
         headers: headers, body: json.encode(data));
     checkSessionExpired(response);
-    print(response.body);
     Map responseMap = jsonDecode(response.body);
     Goal goal = Goal.fromMap(responseMap);
 
     return goal;
   }
 
-  static Future<List<Goal>> getGoals() async {
+  static Future<Goal> getGoal(int id) async {
     var token = await AuthUserServices.getToken();
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: 'Bearer $token',
     };
     headers.addAll(header);
 
-    AuthUser currentUser = await AuthUserServices.getUser();
-    int currentUserId = currentUser.userId;
-    var url = Uri.parse('$userURL/$currentUserId/goalsowned');
+    var url = Uri.parse('$goalsURL/$id');
     Response response = await get(url, headers: headers);
-    print(url);
-    List responseGoals = jsonDecode(response.body);
-    List<Goal> goals = [];
-    for (var element in responseGoals) {
-      goals.add(Goal.fromMap(element));
-    }
-
-    goals.sort((a, b) {
-      var date1 = a.updatedAt;
-      var date2 = b.updatedAt;
-      return date2.compareTo(date1);
-    });
-    return goals;
+    return Goal.fromMap(jsonDecode(response.body));
   }
 
   static Future<Response> updateGoal(Goal goal) async {
@@ -71,7 +54,6 @@ class GoalServices {
     headers.addAll(header);
     Response response =
         await put(url, headers: headers, body: json.encode(goal.toMap()));
-    print(response.body);
     return response;
   }
 
@@ -83,7 +65,6 @@ class GoalServices {
     };
     headers.addAll(header);
     Response response = await delete(url, headers: headers);
-    print(response.body);
     return response;
   }
 }

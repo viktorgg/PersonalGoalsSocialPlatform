@@ -64,9 +64,16 @@ class GoalCard extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            leading: const CircleAvatar(
-              backgroundColor: Colors.grey,
-            ),
+            leading: goal.status > -1
+                ? (goal.status == 0
+                    ? const Icon(
+                        Icons.trending_flat,
+                        color: Colors.grey,
+                        size: 40,
+                      )
+                    : const Icon(Icons.trending_up,
+                        color: Colors.green, size: 40))
+                : const Icon(Icons.trending_down, color: Colors.red, size: 40),
             title:
                 Text('${goal.userOwner.firstName} ${goal.userOwner.lastName}'),
             subtitle: Text(timeAgo(goal.updatedAt)),
@@ -76,20 +83,12 @@ class GoalCard extends StatelessWidget {
                     onTapDown: (details) => showPopupMenu(context, details),
                   )
                 : const SizedBox.shrink(),
-            // ModalRoute.of(context)?.settings.name == '/mygoals'
-            //     ? IconButton(
-            //         alignment: Alignment.topRight,
-            //         onPressed: () {
-            //           goalsData?.deleteGoal(goal);
-            //           successActionBar("Goal deleted!").show(context);
-            //         },
-            //         icon: const Icon(Icons.close))
-            //     : const SizedBox.shrink(),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
               goal.title,
+              textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.w400,

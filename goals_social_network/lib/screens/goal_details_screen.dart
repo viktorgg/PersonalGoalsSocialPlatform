@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:goals_social_network/models/auth_user.dart';
 import 'package:goals_social_network/models/goal_post.dart';
+import 'package:goals_social_network/providers/goal_provider.dart';
 import 'package:goals_social_network/providers/progress_posts_provider.dart';
 import 'package:goals_social_network/screens/common_app_bar.dart';
 import 'package:goals_social_network/screens/goal_progress_post_tile.dart';
@@ -19,36 +20,37 @@ class GoalDetailsScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _GoalDetailsScreenState();
+    return GoalDetailsScreenState();
   }
 }
 
-class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
+class GoalDetailsScreenState extends State<GoalDetailsScreen> {
   List<GoalPost>? _posts;
-  late int _authUserId;
+  AuthUser? _authUser;
 
-  getPosts() async {
+  getActualGoalAndPosts() async {
+    Provider.of<GoalProvider>(context, listen: false).goal = widget.goal;
     _posts = await GoalPostServices.getGoalPosts(widget.goal);
     Provider.of<ProgressPostsProvider>(context, listen: false).posts = _posts!;
     setState(() {});
   }
 
-  setUserId() async {
+  setAuthUser() async {
     AuthUser currentUser = await AuthUserServices.getUser();
-    _authUserId = currentUser.userId;
+    _authUser = currentUser;
     setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    getPosts();
-    setUserId();
+    getActualGoalAndPosts();
+    setAuthUser();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _posts == null
+    return _posts == null || _authUser == null
         ? const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
@@ -57,142 +59,155 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
         : CommonAppBar(
             title: 'Goal Details',
             floatingActionButton: null,
-            body: Container(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Card(
-                        elevation: 30,
-                        surfaceTintColor:
-                            const Color.fromRGBO(223, 153, 240, 1.0),
-                        clipBehavior: Clip.antiAlias,
-                        child: Column(
-                          children: [
-                            ListTile(
-                              leading: const CircleAvatar(
-                                backgroundColor: Colors.grey,
-                              ),
-                              title: Text(
-                                  '${widget.goal.userOwner.firstName} ${widget.goal.userOwner.lastName}'),
-                              subtitle: Text(timeAgo(widget.goal.updatedAt)),
-                              // trailing: IconButton(
-                              //     alignment: Alignment.topRight,
-                              //     onPressed: () {
-                              //       goalsData?.deleteGoal(goal);
-                              //     },
-                              //     icon: const Icon(Icons.close)),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                widget.goal.title,
-                                style: TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black.withOpacity(0.8)),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                widget.goal.description,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black.withOpacity(0.7),
+            body: Consumer<GoalProvider>(builder: (context, goalData, child) {
+              return Container(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Card(
+                          elevation: 30,
+                          surfaceTintColor:
+                              const Color.fromRGBO(223, 153, 240, 1.0),
+                          clipBehavior: Clip.antiAlias,
+                          child: Column(
+                            children: [
+                              ListTile(
+                                  leading: goalData.goal!.status > -1
+                                      ? (goalData.goal!.status == 0
+                                          ? const Icon(
+                                              Icons.trending_flat,
+                                              color: Colors.grey,
+                                              size: 40,
+                                            )
+                                          : const Icon(Icons.trending_up,
+                                              color: Colors.green, size: 40))
+                                      : const Icon(Icons.trending_down,
+                                          color: Colors.red, size: 40),
+                                  title: Text(
+                                      '${goalData.goal!.userOwner.firstName} ${goalData.goal!.userOwner.lastName}'),
+                                  subtitle:
+                                      Text(timeAgo(goalData.goal!.updatedAt)),
+                                  trailing: IconButton(
+                                      alignment: Alignment.topRight,
+                                      onPressed: () {
+                                        Navigator.pushReplacementNamed(
+                                            context, '/mygoals');
+                                      },
+                                      icon: const Icon(
+                                          Icons.keyboard_backspace))),
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  goalData.goal!.title,
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black.withOpacity(0.8)),
                                 ),
                               ),
-                            ),
-                            ButtonBar(
-                              alignment: MainAxisAlignment.start,
-                              children: [
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.only(left: 0.0),
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  goalData.goal!.description,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black.withOpacity(0.7),
                                   ),
-                                  onPressed: () {
-                                    // Share.share(
-                                    //     'check out my website https://example.com',
-                                    //     subject: 'Look what I made!');
-                                  },
-                                  child: const Text('Share'),
                                 ),
-                              ],
-                            ),
-                            //Image.asset('assets/card-sample-image.jpg'),
-                            //Image.asset('assets/card-sample-image-2.jpg'),
-                          ],
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Progress",
-                                    style: TextStyle(
-                                        color: Colors.black.withOpacity(1),
-                                        fontSize: 20)),
-                                if (widget.goal.userOwner.id == _authUserId)
+                              ),
+                              ButtonBar(
+                                alignment: MainAxisAlignment.start,
+                                children: [
                                   TextButton(
-                                      style: ButtonStyle(
-                                          padding: MaterialStateProperty.all<EdgeInsets>(
-                                              const EdgeInsets.all(10)),
-                                          foregroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  Colors.white),
-                                          backgroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  baseColor),
-                                          shape: MaterialStateProperty.all<
-                                                  RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10.0)))),
-                                      onPressed: () => showModalBottomSheet(
-                                          isScrollControlled: true,
-                                          context: context,
-                                          builder: (context) {
-                                            return FractionallySizedBox(
-                                              heightFactor: 0.6,
-                                              child: CreateGoalPostScreen(
-                                                  goal: widget.goal),
-                                            );
-                                          }),
-                                      child: const Icon(Icons.add))
-                              ]),
-                        ),
-                      ),
-                      if (Provider.of<ProgressPostsProvider>(context)
-                          .posts
-                          .isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            'This goal currently has no progress updates\n:(',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.black.withOpacity(0.6),
-                            ),
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.only(left: 0.0),
+                                    ),
+                                    onPressed: () {
+                                      // Share.share(
+                                      //     'check out my website https://example.com',
+                                      //     subject: 'Look what I made!');
+                                    },
+                                    child: const Text('Share'),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        )
-                      else
-                        Expanded(child: Consumer<ProgressPostsProvider>(
-                            builder: (context, postsData, child) {
-                          return ListView.builder(
-                              // controller: scroll,
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.all(0.0),
-                              itemCount: postsData.posts.length,
-                              itemBuilder: (context, i) {
-                                return GoalProgressPostTile(
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Progress",
+                                      style: TextStyle(
+                                          color: Colors.black.withOpacity(1),
+                                          fontSize: 20)),
+                                  if (goalData.goal!.userOwner.id ==
+                                      _authUser!.userId)
+                                    TextButton(
+                                        style: ButtonStyle(
+                                            padding: MaterialStateProperty.all<EdgeInsets>(
+                                                const EdgeInsets.all(10)),
+                                            foregroundColor:
+                                                MaterialStateProperty.all<Color>(
+                                                    Colors.white),
+                                            backgroundColor:
+                                                MaterialStateProperty.all<Color>(
+                                                    baseColor),
+                                            shape: MaterialStateProperty.all<
+                                                    RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(10.0)))),
+                                        onPressed: () => showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            context: context,
+                                            builder: (context) {
+                                              return FractionallySizedBox(
+                                                heightFactor: 0.6,
+                                                child: CreateGoalPostScreen(
+                                                  goal: goalData.goal!,
+                                                ),
+                                              );
+                                            }),
+                                        child: const Icon(Icons.add))
+                                ]),
+                          ),
+                        ),
+                        if (Provider.of<ProgressPostsProvider>(context)
+                            .posts
+                            .isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              'This goal currently has no progress updates\n:(',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.6),
+                              ),
+                            ),
+                          )
+                        else
+                          Expanded(child: Consumer<ProgressPostsProvider>(
+                              builder: (context, postsData, child) {
+                            return ListView.builder(
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.all(0.0),
+                                itemCount: postsData.posts.length,
+                                itemBuilder: (context, i) {
+                                  return GoalProgressPostTile(
+                                    goal: widget.goal,
                                     post: postsData.posts[i],
                                     index: i,
-                                    userOwner: widget.goal.userOwner);
-                              });
-                        }))
-                    ])));
+                                    postsProvider: postsData,
+                                  );
+                                });
+                          }))
+                      ]));
+            }));
   }
 }

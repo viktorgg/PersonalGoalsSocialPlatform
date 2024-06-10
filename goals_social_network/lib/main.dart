@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:goals_social_network/providers/auth_provider.dart';
+import 'package:goals_social_network/providers/goal_provider.dart';
 import 'package:goals_social_network/providers/goals_owned_provider.dart';
-import 'package:goals_social_network/providers/post_reviews_provider.dart';
 import 'package:goals_social_network/providers/progress_posts_provider.dart';
 import 'package:goals_social_network/providers/user_provider.dart';
 import 'package:goals_social_network/screens/feed_screen.dart';
@@ -34,9 +34,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => GoalProvider()),
         ChangeNotifierProvider(create: (_) => GoalsOwnedProvider()),
         ChangeNotifierProvider(create: (_) => ProgressPostsProvider()),
-        ChangeNotifierProvider(create: (_) => PostReviewsProvider()),
       ],
       child: MaterialApp(
           navigatorKey: NavigationService.navigatorKey,

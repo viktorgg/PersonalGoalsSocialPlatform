@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:goals_social_network/models/goal_post.dart';
 import 'package:goals_social_network/models/goal_post_review.dart';
-import 'package:goals_social_network/providers/post_reviews_provider.dart';
 import 'package:goals_social_network/providers/progress_posts_provider.dart';
 import 'package:goals_social_network/screens/create_update_post_review_screen.dart';
 import 'package:goals_social_network/screens/goal_post_review_tiles.dart';
@@ -10,21 +9,24 @@ import 'package:goals_social_network/services/goal_post_review_services.dart';
 import 'package:provider/provider.dart';
 
 import '../models/auth_user.dart';
-import '../models/user.dart';
+import '../models/goal.dart';
+import '../providers/goal_provider.dart';
 import '../services/auth_user_services.dart';
 import '../services/globals.dart';
 import '../services/widgets.dart';
 
 class GoalProgressPostTile extends StatefulWidget {
+  final Goal goal;
   final GoalPost post;
+  final ProgressPostsProvider postsProvider;
   final int index;
-  final User userOwner;
 
   const GoalProgressPostTile(
       {super.key,
       required this.post,
       required this.index,
-      required this.userOwner});
+      required this.goal,
+      required this.postsProvider});
 
   @override
   State<StatefulWidget> createState() {
@@ -34,20 +36,18 @@ class GoalProgressPostTile extends StatefulWidget {
 
 class _GoalProgressPostTileState extends State<GoalProgressPostTile> {
   List<GoalPostReview>? _reviews;
-  int _authUserId = -1;
+  AuthUser? _authUser;
 
   ExpansionTileController tileController = ExpansionTileController();
 
   getReviews() async {
     _reviews = await GoalPostReviewServices.getGoalPostReviews(widget.post);
-    Provider.of<PostReviewsProvider>(context, listen: false).reviews =
-        _reviews!;
     setState(() {});
   }
 
-  setUserId() async {
+  setAuthUser() async {
     AuthUser currentUser = await AuthUserServices.getUser();
-    _authUserId = currentUser.userId;
+    _authUser = currentUser;
     setState(() {});
   }
 
@@ -55,29 +55,28 @@ class _GoalProgressPostTileState extends State<GoalProgressPostTile> {
   void initState() {
     super.initState();
     getReviews();
-    setUserId();
+    setAuthUser();
   }
 
   @override
   Widget build(BuildContext context) {
-    bool authUserReviewed() {
-      return _reviews!.any((el) => el.userOwner.id == _authUserId);
+    bool authUserReviewedPost() {
+      return _reviews!.any((el) => el.userOwner.id == _authUser!.userId);
     }
 
-    return _authUserId == -1 || _reviews == null
+    return _authUser == null || _reviews == null
         ? const Center(
             child: CircularProgressIndicator(),
           )
         : Slidable(
             key: ValueKey(widget.index),
-            enabled: widget.userOwner.id == _authUserId,
+            enabled: widget.goal.userOwner.id == _authUser!.userId,
             endActionPane: ActionPane(
               motion: const ScrollMotion(),
               children: [
                 SlidableAction(
                   onPressed: (BuildContext context) {
-                    Provider.of<ProgressPostsProvider>(context, listen: false)
-                        .deletePost(widget.post);
+                    widget.postsProvider.deletePost(widget.post);
                     successActionBar("Progress post deleted!").show(context);
                   },
                   backgroundColor: const Color(0xFFFE4A49),
@@ -93,7 +92,7 @@ class _GoalProgressPostTileState extends State<GoalProgressPostTile> {
                     controller: tileController,
                     title: Row(children: [
                       Text(
-                          'Progress Update #${Provider.of<ProgressPostsProvider>(context, listen: false).posts.length - widget.index}',
+                          'Progress Update #${widget.postsProvider.posts.length - widget.index}',
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18)),
                       const SizedBox(width: 12),
@@ -103,15 +102,19 @@ class _GoalProgressPostTileState extends State<GoalProgressPostTile> {
                     ]),
                     subtitle: Text(
                       widget.post.description,
-                      maxLines: 2, //customize your number of lines
-                      overflow: TextOverflow
-                          .ellipsis, //add this to set (...) at the end of sentence
+                      // maxLines: 2,
+                      // overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontSize: 15),
                     ),
                     trailing: Wrap(
                       children: [
                         Text(
-                          '${widget.post.reviews.length}  ',
+                          Provider.of<GoalProvider>(context, listen: false)
+                                  .goal!
+                                  .progressPosts
+                                  .isEmpty
+                              ? '0  '
+                              : '${Provider.of<GoalProvider>(context, listen: false).goal!.progressPosts.firstWhere((e) => e.id == widget.post.id).reviews.length}  ',
                           style: const TextStyle(fontSize: 15),
                         ),
                         const Icon(Icons.feedback_outlined),
@@ -120,17 +123,20 @@ class _GoalProgressPostTileState extends State<GoalProgressPostTile> {
                     onExpansionChanged: (value) {
                       if (value) {
                         getReviews();
+                        Provider.of<GoalProvider>(context, listen: false)
+                            .setGoal(widget.goal);
                       }
                     },
                     children: [
-                      Consumer<PostReviewsProvider>(
-                          builder: (context, reviewsData, child) {
-                        return GoalPostReviewTiles(
-                            reviewsData: reviewsData,
-                            authUserReviewed: authUserReviewed(),
-                            tileController: tileController);
-                      }),
-                      widget.userOwner.id == _authUserId || authUserReviewed()
+                      GoalPostReviewTiles(
+                        goal: widget.goal,
+                        reviews: _reviews!,
+                        authUserReviewed: authUserReviewedPost(),
+                        post: widget.post,
+                        tileController: tileController,
+                      ),
+                      widget.goal.userOwner.id == _authUser!.userId ||
+                              authUserReviewedPost()
                           ? const SizedBox.shrink()
                           : ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -154,9 +160,10 @@ class _GoalProgressPostTileState extends State<GoalProgressPostTile> {
                                                 .viewInsets
                                                 .bottom),
                                         child: CreateUpdatePostReviewScreen(
+                                          goal: widget.goal,
                                           post: widget.post,
-                                          tileController: tileController,
                                           oldReview: null,
+                                          tileController: tileController,
                                         ),
                                       );
                                     });

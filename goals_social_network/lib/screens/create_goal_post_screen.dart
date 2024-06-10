@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:goals_social_network/models/goal.dart';
+import 'package:goals_social_network/providers/goal_provider.dart';
 import 'package:goals_social_network/providers/progress_posts_provider.dart';
 import 'package:goals_social_network/services/widgets.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,7 +38,8 @@ class _CreateGoalPostScreenState extends State<CreateGoalPostScreen> {
       if (_postDescription.isNotEmpty) {
         Provider.of<ProgressPostsProvider>(context, listen: false)
             .createPost(_postDescription, widget.goal);
-        Navigator.pop(context);
+        Provider.of<GoalProvider>(context, listen: false).setGoal(widget.goal);
+        Navigator.of(context).pop(context);
         successActionBar("Progress posted!").show(context);
       } else {
         invalidFormBar("Description needs to be filled").show(context);
@@ -46,74 +48,70 @@ class _CreateGoalPostScreenState extends State<CreateGoalPostScreen> {
 
     return Container(
         padding: const EdgeInsets.all(25.0),
-        child: Column(
-            //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const ListTile(
-                title: Text(
-                  'Post new update on your Progress',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 30,
-                      color: baseColor,
-                      fontWeight: FontWeight.w500),
+        child: Column(children: [
+          const ListTile(
+            title: Text(
+              'Post new update on your Progress',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 30, color: baseColor, fontWeight: FontWeight.w500),
+            ),
+          ),
+          Expanded(
+              child: ListView(children: [
+            TextField(
+              decoration: const InputDecoration(
+                  hintText: "Enter description for your progress"),
+              autofocus: false,
+              onChanged: (val) {
+                _postDescription = val;
+              },
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: TextButton(
+                onPressed: () {
+                  showCameraOrGalleyModal();
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  side: const BorderSide(color: baseColor, width: 2),
+                ),
+                child: const Text(
+                  'Attach Image',
+                  style: TextStyle(color: baseColor),
                 ),
               ),
-              Expanded(
-                  child: ListView(children: [
-                TextField(
-                  decoration: const InputDecoration(
-                      hintText: "Enter description for your progress"),
-                  autofocus: false,
-                  onChanged: (val) {
-                    _postDescription = val;
-                  },
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: TextButton(
-                    onPressed: () {
-                      showCameraOrGalleyModal();
-                    },
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: baseColor, width: 2),
-                    ),
-                    child: const Text(
-                      'Attach Image',
-                      style: TextStyle(color: baseColor),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                (imagePath != null)
-                    ? Image.file(File(imagePath!))
-                    : const SizedBox.shrink(),
-                if (filesAttached.isNotEmpty)
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Text('Attached media', textAlign: TextAlign.left),
-                      Divider()
-                    ],
-                  ),
-                ListView.builder(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.all(0.0),
-                    itemCount: filesAttached.length,
-                    itemBuilder: (context, i) {
-                      return Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                          child: SizedBox(
-                            height: 40,
-                            child: Center(child: Text(filesAttached[i].name)),
-                          ));
-                    }),
-                longButtons('Post Progress', createProgressPost)
-              ]))
-            ]));
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            (imagePath != null)
+                ? Image.file(File(imagePath!))
+                : const SizedBox.shrink(),
+            if (filesAttached.isNotEmpty)
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Text('Attached media', textAlign: TextAlign.left),
+                  Divider()
+                ],
+              ),
+            ListView.builder(
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(0.0),
+                itemCount: filesAttached.length,
+                itemBuilder: (context, i) {
+                  return Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                      child: SizedBox(
+                        height: 40,
+                        child: Center(child: Text(filesAttached[i].name)),
+                      ));
+                }),
+            longButtons('Post Progress', createProgressPost)
+          ]))
+        ]));
   }
 
   void pickMedia(ImageSource source) async {
