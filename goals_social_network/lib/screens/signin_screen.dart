@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../models/auth_user.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user_provider.dart';
+import '../services/globals.dart';
 import '../services/validators.dart';
 import '../services/widgets.dart';
 
@@ -92,34 +93,59 @@ class _SignInScreenState extends State<SignInScreen> {
       }
     }
 
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          padding: const EdgeInsets.all(40.0),
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 15.0),
-                label("Email"),
-                const SizedBox(height: 5.0),
-                emailField,
-                const SizedBox(height: 20.0),
-                label("Password"),
-                const SizedBox(height: 5.0),
-                passwordField,
-                const SizedBox(height: 20.0),
-                auth.loggedInStatus == Status.authenticating
-                    ? loading
-                    : longButtons("Sign in", signIn),
-                const SizedBox(height: 5.0),
-                signUpLabel
-              ],
+    return Scaffold(
+        body: SingleChildScrollView(
+            child: Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      decoration: const BoxDecoration(color: baseColor),
+      child: Form(
+        key: formKey,
+        child: Column(children: [
+          const SizedBox(
+            height: 50,
+          ),
+          const Text(
+            "Sign In",
+            style: TextStyle(color: Colors.white, fontSize: 25),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(30.0),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 15.0),
+                  label("Email"),
+                  const SizedBox(height: 5.0),
+                  emailField,
+                  const SizedBox(height: 20.0),
+                  label("Password"),
+                  const SizedBox(height: 5.0),
+                  passwordField,
+                  const SizedBox(height: 20.0),
+                  auth.loggedInStatus == Status.authenticating
+                      ? loading
+                      : longButtons("Sign in", signIn),
+                  const SizedBox(height: 5.0),
+                  signUpLabel
+                ],
+              ),
             ),
           ),
-        ),
+        ]),
       ),
-    );
+    )));
   }
 }

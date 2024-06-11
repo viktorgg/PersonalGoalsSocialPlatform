@@ -19,14 +19,6 @@ class _FeedScreenState extends State<FeedScreen> {
 
   getGoals() async {
     _goalsFollowed = await UserServices.getGoalsFollowed();
-    //Provider.of<GoalsProvider>(context, listen: false).goalsOwned = _goalsFollowed!;
-    setState(() {});
-  }
-
-  List<User> _apiSearchResult = [];
-
-  Future<void> _handleSearch(String input) async {
-    _apiSearchResult = await UserServices.findUsersOnNameContaining(input);
     setState(() {});
   }
 
@@ -55,7 +47,6 @@ class _FeedScreenState extends State<FeedScreen> {
                       Goal? goal = _goalsFollowed?[index];
                       return GoalCard(
                         goal: goal!,
-                        //goalsData: null,
                       );
                     })),
             floatingActionButton: null,

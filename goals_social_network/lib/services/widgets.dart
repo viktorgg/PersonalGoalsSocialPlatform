@@ -53,7 +53,7 @@ Flushbar invalidFormBar(String message) {
     message: message,
     isDismissible: true,
     duration: const Duration(seconds: 3),
-    backgroundColor: Colors.red,
+    backgroundColor: Colors.black,
     messageColor: Colors.white,
     messageSize: 20,
   );

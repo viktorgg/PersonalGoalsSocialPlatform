@@ -7,7 +7,8 @@ const Map<String, String> header = {"Content-Type": "application/json"};
 const String goalsURL = '$baseURL/goals';
 const String goalPostURL = '$baseURL/posts';
 const String postReviewsURL = '$baseURL/reviews';
-const String userURL = '$baseURL/user';
+const String usersURL = '$baseURL/users';
+const String invitesURL = '$baseURL/invites';
 const String signUpURL = '$baseURL/signup';
 const String signInURL = '$baseURL/signin';
 

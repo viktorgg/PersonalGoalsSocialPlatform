@@ -94,8 +94,7 @@ class _CommonAppBarState extends State<CommonAppBar> {
                   ? const GlowIcon(
                       Icons.dynamic_feed,
                       glowColor: Colors.white,
-                      size: 30,
-                      blurRadius: 20,
+                      blurRadius: 10,
                     )
                   : const Icon(Icons.dynamic_feed),
               tooltip: 'Show feed',

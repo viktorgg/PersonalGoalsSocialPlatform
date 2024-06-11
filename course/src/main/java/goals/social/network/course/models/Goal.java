@@ -35,9 +35,6 @@ public class Goal {
     @Column(nullable = false)
     private Boolean done;
 
-    @Column(nullable = false)
-    private int status;
-
     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -45,6 +42,9 @@ public class Goal {
     @Column()
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Transient
+    private int status;
 
     public Goal(String title, String description, boolean done, User userOwner) {
         this.title = title;
@@ -78,4 +78,8 @@ public class Goal {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "goal")
     @Fetch(FetchMode.SUBSELECT)
     private List<GoalProgressPost> progressPosts = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "goal")
+    @Fetch(FetchMode.SUBSELECT)
+    private List<GoalInviteCode> inviteCodes = new ArrayList<>();
 }

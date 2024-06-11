@@ -1,9 +1,6 @@
 package goals.social.network.course.controllers;
 
-import goals.social.network.course.models.Goal;
-import goals.social.network.course.models.GoalPostReview;
-import goals.social.network.course.models.GoalProgressPost;
-import goals.social.network.course.models.User;
+import goals.social.network.course.models.*;
 import goals.social.network.course.repositories.GoalRepository;
 import goals.social.network.course.repositories.UserRepository;
 import goals.social.network.course.services.GoalService;
@@ -22,7 +19,6 @@ import java.util.Map;
 public class GoalController {
 
     private final GoalRepository goalRepository;
-
     private final UserRepository userRepository;
 
     private final GoalService goalService;
@@ -76,6 +72,16 @@ public class GoalController {
         if (exists) {
             goalRepository.deleteById(id);
             return new ResponseEntity<>("Goal with ID %s is deleted".formatted(id), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Goal with ID %s is not found".formatted(id), HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/{id}/invites")
+    public ResponseEntity<?> getGoalInvites(@PathVariable Long id) {
+        boolean exists = goalRepository.existsById(id);
+        if (exists) {
+            List<GoalInviteCode> inviteCodes = goalRepository.getReferenceById(id).getInviteCodes();
+            return new ResponseEntity<>(inviteCodes, HttpStatus.OK);
         }
         return new ResponseEntity<>("Goal with ID %s is not found".formatted(id), HttpStatus.BAD_REQUEST);
     }

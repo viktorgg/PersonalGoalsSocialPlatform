@@ -2,7 +2,10 @@ package goals.social.network.course.controllers;
 
 import goals.social.network.course.models.Goal;
 import goals.social.network.course.models.User;
+import goals.social.network.course.models.UserGoalRelations;
 import goals.social.network.course.models.UserRelations;
+import goals.social.network.course.repositories.GoalRepository;
+import goals.social.network.course.repositories.UserGoalRelationsRepository;
 import goals.social.network.course.repositories.UserRepository;
 import goals.social.network.course.repositories.UserRelationsRepository;
 import goals.social.network.course.services.GoalService;
@@ -18,11 +21,14 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/user")
+@RequestMapping(path = "/users")
 public class UserController {
 
     private final UserRepository userRepository;
-    private final UserRelationsRepository relationsRepository;
+    private final UserRelationsRepository userRelationsRepository;
+
+    private final GoalRepository goalRepository;
+    private final UserGoalRelationsRepository userGoalRelationsRepository;
 
     private final GoalService goalService;
     private final UserService userService;
@@ -64,10 +70,22 @@ public class UserController {
         Optional<User> userTo = userRepository.findById(userIdTo);
         if (userFrom.isPresent() && userTo.isPresent()) {
             UserRelations obj = new UserRelations(userTo.get(), userFrom.get());
-            relationsRepository.save(obj);
+            userRelationsRepository.save(obj);
             return new ResponseEntity<>("User %s follows user %s".formatted(userIdFrom, userIdTo), HttpStatus.OK);
         }
         return new ResponseEntity<>("Users not found", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("{userId}/followgoal/{goalId}")
+    public ResponseEntity<?> createUserGoalRel(@PathVariable Long userId, @PathVariable Long goalId) {
+        Optional<User> user = userRepository.findById(userId);
+        Optional<Goal> goal = goalRepository.findById(goalId);
+        if (user.isPresent() && goal.isPresent()) {
+            UserGoalRelations obj = new UserGoalRelations(user.get(), goal.get());
+            userGoalRelationsRepository.save(obj);
+            return new ResponseEntity<>("User %s follows goal %s".formatted(userId, goalId), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("User or goal not found", HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/findAllByName")

@@ -52,7 +52,6 @@ class _FriendGoalsScreenState extends State<FriendGoalsScreen> {
                         Goal? goal = _goals?[index];
                         return GoalCard(
                           goal: goal!,
-                          //goalsData: goalsData,
                         );
                       });
                 },

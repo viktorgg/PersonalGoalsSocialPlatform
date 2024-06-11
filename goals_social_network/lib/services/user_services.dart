@@ -19,7 +19,7 @@ class UserServices {
 
     AuthUser currentUser = await AuthUserServices.getUser();
     int currentUserId = currentUser.userId;
-    var url = Uri.parse('$userURL/$currentUserId/rel');
+    var url = Uri.parse('$usersURL/$currentUserId/rel');
     Response response = await get(url, headers: headers);
     checkSessionExpired(response);
     Map responseBody = jsonDecode(response.body);
@@ -39,7 +39,7 @@ class UserServices {
     };
     headers.addAll(header);
 
-    var url = Uri.parse('$userURL/$userId/goalsowned');
+    var url = Uri.parse('$usersURL/$userId/goalsowned');
     Response response = await get(url, headers: headers);
     List responseGoals = jsonDecode(response.body);
     List<Goal> goals = [];
@@ -47,6 +47,11 @@ class UserServices {
       goals.add(Goal.fromMap(element));
     }
 
+    goals.sort((a, b) {
+      var date1 = a.updatedAt;
+      var date2 = b.updatedAt;
+      return date2.compareTo(date1);
+    });
     return goals;
   }
 
@@ -59,7 +64,7 @@ class UserServices {
 
     AuthUser currentUser = await AuthUserServices.getUser();
     int currentUserId = currentUser.userId;
-    var url = Uri.parse('$userURL/$currentUserId/goalsfollowed');
+    var url = Uri.parse('$usersURL/$currentUserId/goalsfollowed');
     Response response = await get(url, headers: headers);
     List responseGoals = jsonDecode(response.body);
     List<Goal> goals = [];
@@ -79,7 +84,7 @@ class UserServices {
 
     AuthUser currentUser = await AuthUserServices.getUser();
     int currentUserId = currentUser.userId;
-    var url = Uri.parse('$userURL/$currentUserId/goalsowned');
+    var url = Uri.parse('$usersURL/$currentUserId/goalsowned');
     Response response = await get(url, headers: headers);
     List responseGoals = jsonDecode(response.body);
     List<Goal> goals = [];
@@ -102,7 +107,7 @@ class UserServices {
     };
     headers.addAll(header);
 
-    var url = Uri.parse('$userURL/findAllByName?name=$name');
+    var url = Uri.parse('$usersURL/findAllByName?name=$name');
     Response response = await get(url, headers: headers);
     List responseUsers = jsonDecode(response.body);
     List<User> foundUsers = [];
@@ -113,7 +118,7 @@ class UserServices {
     return foundUsers;
   }
 
-  static Future<void> followUser(int userId) async {
+  static Future<Response> followUser(int userId) async {
     var token = await AuthUserServices.getToken();
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -122,7 +127,24 @@ class UserServices {
 
     AuthUser currentUser = await AuthUserServices.getUser();
     int currentUserId = currentUser.userId;
-    var url = Uri.parse('$userURL/$currentUserId/follow/$userId');
-    await post(url, headers: headers);
+    var url = Uri.parse('$usersURL/$currentUserId/follow/$userId');
+    Response response = await post(url, headers: headers);
+
+    return response;
+  }
+
+  static Future<Response> followGoal(int goalId) async {
+    var token = await AuthUserServices.getToken();
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+    };
+    headers.addAll(header);
+
+    AuthUser currentUser = await AuthUserServices.getUser();
+    int currentUserId = currentUser.userId;
+    var url = Uri.parse('$usersURL/$currentUserId/followgoal/$goalId');
+    Response response = await post(url, headers: headers);
+
+    return response;
   }
 }

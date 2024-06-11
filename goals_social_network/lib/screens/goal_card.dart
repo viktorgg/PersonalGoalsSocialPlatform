@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:goals_social_network/services/goal_invite_services.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../models/goal.dart';
@@ -55,6 +58,14 @@ class GoalCard extends StatelessWidget {
           successActionBar("Goal deleted!").show(context);
         }
       });
+    }
+
+    String generateRandomString(int len) {
+      var r = Random();
+      const chars =
+          'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+      return List.generate(len, (index) => chars[r.nextInt(chars.length)])
+          .join();
     }
 
     return Card(
@@ -114,8 +125,13 @@ class GoalCard extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 0.0),
                   ),
                   onPressed: () {
-                    Share.share('check out my website https://example.com',
-                        subject: 'Look what I made!');
+                    String inviteCode = generateRandomString(15);
+                    Share.share(
+                            'Invitation to follow my goal in GoalsApp! Use the invite code:\n $inviteCode',
+                            subject:
+                                'Invitation to follow my goal in GoalsApp!')
+                        .then((value) =>
+                            GoalInviteServices.createInvite(inviteCode, goal));
                   },
                   child: const Text('Share'),
                 )

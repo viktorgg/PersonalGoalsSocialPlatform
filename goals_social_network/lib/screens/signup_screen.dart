@@ -1,10 +1,13 @@
 import 'package:another_flushbar/flushbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:goals_social_network/screens/invite_code_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../models/auth_user.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user_provider.dart';
+import '../services/globals.dart';
 import '../services/validators.dart';
 import '../services/widgets.dart';
 
@@ -119,7 +122,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
           if (response.containsKey("data")) {
             AuthUser user = response['data'];
             Provider.of<UserProvider>(context, listen: false).setUser(user);
-            Navigator.pushReplacementNamed(context, '/feed');
+            Navigator.pushAndRemoveUntil(
+                context,
+                CupertinoPageRoute(
+                    builder: (context) => const InviteCodeScreen()),
+                (route) => false);
           } else {
             Flushbar(
               title: "Registration failed!",
@@ -133,50 +140,72 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
     }
 
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
+    return Scaffold(
         body: SingleChildScrollView(
-          padding: const EdgeInsets.all(40.0),
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 15.0),
-                label("First Name"),
-                const SizedBox(height: 10.0),
-                firstNameField,
-                const SizedBox(height: 15.0),
-                label("Last Name"),
-                const SizedBox(height: 10.0),
-                lastNameField,
-                const SizedBox(height: 15.0),
-                label("Email"),
-                const SizedBox(height: 5.0),
-                emailField,
-                const SizedBox(height: 15.0),
-                label("Phone number (Optional)"),
-                const SizedBox(height: 5.0),
-                phoneField,
-                const SizedBox(height: 15.0),
-                label("Password"),
-                const SizedBox(height: 10.0),
-                passwordField,
-                const SizedBox(height: 15.0),
-                label("Confirm Password"),
-                const SizedBox(height: 10.0),
-                confirmPasswordField,
-                const SizedBox(height: 20.0),
-                auth.loggedInStatus == Status.authenticating
-                    ? loading
-                    : longButtons("Sign Up", signUp),
-                signInLabel
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+            child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                decoration: const BoxDecoration(color: baseColor),
+                child: Expanded(
+                  child: Column(children: [
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    const Text(
+                      "Sign Up",
+                      style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(30.0),
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20)),
+                      ),
+                      child: Form(
+                        key: formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            label("First Name"),
+                            const SizedBox(height: 10.0),
+                            firstNameField,
+                            const SizedBox(height: 15.0),
+                            label("Last Name"),
+                            const SizedBox(height: 10.0),
+                            lastNameField,
+                            const SizedBox(height: 15.0),
+                            label("Email"),
+                            const SizedBox(height: 5.0),
+                            emailField,
+                            const SizedBox(height: 15.0),
+                            label("Phone number (Optional)"),
+                            const SizedBox(height: 5.0),
+                            phoneField,
+                            const SizedBox(height: 15.0),
+                            label("Password"),
+                            const SizedBox(height: 10.0),
+                            passwordField,
+                            const SizedBox(height: 15.0),
+                            label("Confirm Password"),
+                            const SizedBox(height: 10.0),
+                            confirmPasswordField,
+                            const SizedBox(height: 20.0),
+                            auth.loggedInStatus == Status.authenticating
+                                ? loading
+                                : longButtons("Sign Up", signUp),
+                            signInLabel
+                          ],
+                        ),
+                      ),
+                    )
+                  ]),
+                ))));
   }
 }
