@@ -8,9 +8,11 @@ import 'package:goals_social_network/screens/goal_progress_post_tile.dart';
 import 'package:goals_social_network/services/globals.dart';
 import 'package:goals_social_network/services/goal_post_services.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../models/goal.dart';
 import '../services/auth_user_services.dart';
+import '../services/goal_invite_services.dart';
 import 'create_goal_post_screen.dart';
 
 class GoalDetailsScreen extends StatefulWidget {
@@ -73,29 +75,30 @@ class GoalDetailsScreenState extends State<GoalDetailsScreen> {
                           child: Column(
                             children: [
                               ListTile(
-                                  leading: goalData.goal!.status > -1
-                                      ? (goalData.goal!.status == 0
-                                          ? const Icon(
-                                              Icons.trending_flat,
-                                              color: Colors.grey,
-                                              size: 40,
-                                            )
-                                          : const Icon(Icons.trending_up,
-                                              color: Colors.green, size: 40))
-                                      : const Icon(Icons.trending_down,
-                                          color: Colors.red, size: 40),
-                                  title: Text(
-                                      '${goalData.goal!.userOwner.firstName} ${goalData.goal!.userOwner.lastName}'),
-                                  subtitle:
-                                      Text(timeAgo(goalData.goal!.updatedAt)),
-                                  trailing: IconButton(
-                                      alignment: Alignment.topRight,
-                                      onPressed: () {
-                                        Navigator.pushReplacementNamed(
-                                            context, '/mygoals');
-                                      },
-                                      icon: const Icon(
-                                          Icons.keyboard_backspace))),
+                                leading: goalData.goal!.status > -1
+                                    ? (goalData.goal!.status == 0
+                                        ? const Icon(
+                                            Icons.trending_flat,
+                                            color: Colors.grey,
+                                            size: 50,
+                                          )
+                                        : const Icon(Icons.trending_up,
+                                            color: Colors.green, size: 50))
+                                    : const Icon(Icons.trending_down,
+                                        color: Colors.red, size: 50),
+                                title: Text(
+                                    '${goalData.goal!.userOwner.firstName} ${goalData.goal!.userOwner.lastName}'),
+                                subtitle:
+                                    Text(timeAgo(goalData.goal!.updatedAt)),
+                                // trailing:
+                                // IconButton(
+                                //     alignment: Alignment.topRight,
+                                //     onPressed: () {
+                                //       Navigator.pushReplacementNamed(
+                                //           context, '/mygoals');
+                                //     },
+                                //     icon: const Icon(Icons.arrow_back)),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Text(
@@ -119,17 +122,26 @@ class GoalDetailsScreenState extends State<GoalDetailsScreen> {
                               ButtonBar(
                                 alignment: MainAxisAlignment.start,
                                 children: [
-                                  TextButton(
-                                    style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.only(left: 0.0),
+                                  if (widget.goal.userOwner.id ==
+                                      _authUser?.userId)
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        padding:
+                                            const EdgeInsets.only(left: 0.0),
+                                      ),
+                                      onPressed: () {
+                                        String inviteCode =
+                                            generateRandomString(15);
+                                        Share.share(
+                                                'Invitation to follow my goal in GoalsApp! Use the invite code:\n $inviteCode',
+                                                subject:
+                                                    'Invitation to follow my goal in GoalsApp!')
+                                            .then((value) =>
+                                                GoalInviteServices.createInvite(
+                                                    inviteCode, widget.goal));
+                                      },
+                                      child: const Text('Share'),
                                     ),
-                                    onPressed: () {
-                                      // Share.share(
-                                      //     'check out my website https://example.com',
-                                      //     subject: 'Look what I made!');
-                                    },
-                                    child: const Text('Share'),
-                                  ),
                                 ],
                               ),
                             ],

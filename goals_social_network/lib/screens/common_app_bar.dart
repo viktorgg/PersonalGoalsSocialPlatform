@@ -1,12 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_glow/flutter_glow.dart';
-import 'package:goals_social_network/screens/view_friends_screen.dart';
+import 'package:goals_social_network/screens/seach_goals_screen.dart';
 
-import '../models/user.dart';
 import '../services/globals.dart';
-import '../services/user_services.dart';
-import '../services/widgets.dart';
 import 'account_drawer_screen.dart';
+import 'invite_code_screen.dart';
 
 class CommonAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
@@ -30,45 +29,13 @@ class CommonAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CommonAppBarState extends State<CommonAppBar> {
-  List<User> _apiSearchResult = [];
-
   bool isFeedCurrentRoute() {
     return ModalRoute.of(context)?.settings.name == '/feed' ? true : false;
   }
 
-  Future<void> _handleSearch(String input) async {
-    _apiSearchResult = await UserServices.findUsersOnNameContaining(input);
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
-    showPopupMenu(BuildContext context, TapDownDetails details, User friend) {
-      showMenu<String>(
-        color: baseColor,
-        context: context,
-        position: RelativeRect.fromLTRB(
-            details.globalPosition.dx,
-            details.globalPosition.dy,
-            details.globalPosition.dx,
-            details.globalPosition.dy),
-        items: [
-          const PopupMenuItem<String>(
-              value: '1',
-              child:
-                  Text('Follow user', style: TextStyle(color: Colors.white))),
-        ],
-        elevation: 8.0,
-      ).then((value) {
-        if (value == null) return;
-        if (value == "1") {
-          UserServices.followUser(friend.id);
-        }
-      });
-    }
-
     return Scaffold(
-      drawer: const Drawer(child: ViewFriendsScreen()),
       endDrawer: const Drawer(child: AccountDrawerScreen()),
       appBar: AppBar(
         title: Text(widget.title, style: const TextStyle(color: Colors.white)),
@@ -81,10 +48,14 @@ class _CommonAppBarState extends State<CommonAppBar> {
           children: [
             Builder(
               builder: (context) => IconButton(
-                icon: const Icon(Icons.people_outline),
-                tooltip: 'My friends',
+                icon: const Icon(Icons.add_card),
+                tooltip: 'Use invitation code',
                 onPressed: () {
-                  Scaffold.of(context).openDrawer();
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => const InviteCodeScreen()),
+                      (route) => false);
                 },
               ),
             ),
@@ -92,12 +63,12 @@ class _CommonAppBarState extends State<CommonAppBar> {
                 child: IconButton(
               icon: isFeedCurrentRoute()
                   ? const GlowIcon(
-                      Icons.dynamic_feed,
+                      Icons.home_filled,
                       glowColor: Colors.white,
                       blurRadius: 10,
                     )
-                  : const Icon(Icons.dynamic_feed),
-              tooltip: 'Show feed',
+                  : const Icon(Icons.home_filled),
+              tooltip: 'Show followed goals',
               onPressed: () {
                 if (!isFeedCurrentRoute()) {
                   Navigator.pushReplacementNamed(context, '/feed');
@@ -108,55 +79,18 @@ class _CommonAppBarState extends State<CommonAppBar> {
         ),
         actions: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              tooltip: 'Search for users',
-              onPressed: () {
-                _apiSearchResult.clear();
-                showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return Scaffold(
-                          body: Column(
-                        children: [
-                          SizedBox(
-                            height: 45,
-                            width: 360,
-                            child: TextField(
-                                onChanged: _handleSearch,
-                                decoration: buildInputDecoration(
-                                    'Search for users', Icons.search)),
-                          ),
-                          Expanded(
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  padding: const EdgeInsets.all(0.0),
-                                  itemCount: _apiSearchResult.length,
-                                  itemBuilder: (context, i) {
-                                    return ListTile(
-                                      leading: const CircleAvatar(
-                                        backgroundColor: Colors.grey,
-                                        //backgroundImage: new NetworkImage(friendsModel.profileImageUrl),
-                                      ),
-                                      title: Text(
-                                          '${_apiSearchResult[i].firstName} ${_apiSearchResult[i].lastName}'),
-                                      onTap: () {
-                                        setState(() {});
-                                      },
-                                      trailing: GestureDetector(
-                                        child: const Icon(Icons.settings),
-                                        onTapDown: (details) => showPopupMenu(
-                                            context,
-                                            details,
-                                            _apiSearchResult[i]),
-                                      ),
-                                    );
-                                  })),
-                        ],
-                      ));
-                    });
-              },
-            ),
+            if (ModalRoute.of(context)?.settings.name == '/feed')
+              IconButton(
+                icon: const Icon(Icons.search),
+                tooltip: 'Search for users',
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => const SearchGoalsScreen()),
+                      (route) => false);
+                },
+              ),
             Builder(
               builder: (context) => IconButton(
                 icon: const Icon(Icons.account_circle_outlined),

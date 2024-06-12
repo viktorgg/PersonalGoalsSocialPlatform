@@ -31,7 +31,7 @@ class _InviteCodeScreenState extends State<InviteCodeScreen> {
             UserServices.followGoal(responseBody['goalId']);
             GoalInviteServices.deleteInvite(responseBody['id']).then(
                 (value) => Navigator.pushReplacementNamed(context, '/feed'));
-            // successActionBar('Invitation code used successfully').show(context);
+            successActionBar('Invitation code used successfully').show(context);
           } else {
             invalidFormBar("Invitation code not valid").show(context);
           }

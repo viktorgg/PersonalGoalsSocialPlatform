@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:goals_social_network/models/goal.dart';
 import 'package:goals_social_network/services/auth_user_services.dart';
 import 'package:goals_social_network/services/globals.dart';
+import 'package:goals_social_network/services/user_services.dart';
 import 'package:http/http.dart';
 
 import '../models/auth_user.dart';
@@ -25,7 +26,6 @@ class GoalServices {
     headers.addAll(header);
     Response response = await post(Uri.parse('$goalsURL/create'),
         headers: headers, body: json.encode(data));
-    checkSessionExpired(response);
     Map responseMap = jsonDecode(response.body);
     Goal goal = Goal.fromMap(responseMap);
 
@@ -66,5 +66,17 @@ class GoalServices {
     headers.addAll(header);
     Response response = await delete(url, headers: headers);
     return response;
+  }
+
+  static Future<List<Goal>> filterGoalsOnTitleContaining(String text) async {
+    List<Goal> currentGoals = await UserServices.getGoalsFollowed();
+
+    List<Goal> foundGoals = [];
+    for (Goal goal in currentGoals) {
+      if (goal.title.toLowerCase().contains(text.toLowerCase())) {
+        foundGoals.add(goal);
+      }
+    }
+    return foundGoals;
   }
 }

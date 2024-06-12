@@ -4,7 +4,6 @@ import goals.social.network.course.models.*;
 import goals.social.network.course.repositories.GoalRepository;
 import goals.social.network.course.repositories.UserRepository;
 import goals.social.network.course.services.GoalService;
-import goals.social.network.course.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +39,8 @@ public class GoalController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createGoal(@RequestBody Map<String, Object> payload) {
-        int userId = (int) payload.get("userId");
-        User user = userRepository.findById((long) userId).get();
+        long userId = (int) payload.get("userId");
+        User user = userRepository.findById(userId).get();
         Goal goal = new Goal(
                 (String) payload.get("title"),
                 (String) payload.get("description"),
@@ -72,16 +71,6 @@ public class GoalController {
         if (exists) {
             goalRepository.deleteById(id);
             return new ResponseEntity<>("Goal with ID %s is deleted".formatted(id), HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Goal with ID %s is not found".formatted(id), HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping("/{id}/invites")
-    public ResponseEntity<?> getGoalInvites(@PathVariable Long id) {
-        boolean exists = goalRepository.existsById(id);
-        if (exists) {
-            List<GoalInviteCode> inviteCodes = goalRepository.getReferenceById(id).getInviteCodes();
-            return new ResponseEntity<>(inviteCodes, HttpStatus.OK);
         }
         return new ResponseEntity<>("Goal with ID %s is not found".formatted(id), HttpStatus.BAD_REQUEST);
     }

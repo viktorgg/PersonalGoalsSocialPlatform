@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,13 +25,13 @@ public class GoalPostController {
     @PostMapping("/create")
     public ResponseEntity<?> createGoalProgressPost(@RequestBody Map<String, Object> payload) {
         long goalId = (int) payload.get("goalId");
-        Optional<Goal> goal = goalRepository.findById(goalId);
-        if (goal.isPresent()) {
-            GoalProgressPost goalPost = new GoalProgressPost(
-                    (String) payload.get("description"),
-                    goal.get()
-            );
+        Optional<Goal> foundGoal = goalRepository.findById(goalId);
+        if (foundGoal.isPresent()) {
+            Goal goal = foundGoal.get();
+            GoalProgressPost goalPost = new GoalProgressPost((String) payload.get("description"), goal);
+            goal.setUpdatedAt(LocalDateTime.now());
             goalProgressPostRepository.save(goalPost);
+            goalRepository.save(goal);
             return new ResponseEntity<>(goalPost.toMap(), HttpStatus.OK);
         }
         return new ResponseEntity<>("Goal with ID %s is not found".formatted(goalId), HttpStatus.BAD_REQUEST);
@@ -49,6 +50,10 @@ public class GoalPostController {
     public ResponseEntity<?> deleteGoalPost(@PathVariable Long id) {
         boolean exists = goalProgressPostRepository.existsById(id);
         if (exists) {
+            GoalProgressPost goalPost = goalProgressPostRepository.getReferenceById(id);
+            Goal goal = goalPost.getGoal();
+            goal.setUpdatedAt(LocalDateTime.now());
+            goalRepository.save(goal);
             goalProgressPostRepository.deleteById(id);
             return new ResponseEntity<>("Post with ID %s is deleted".formatted(id), HttpStatus.OK);
         }

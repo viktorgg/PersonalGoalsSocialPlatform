@@ -40,7 +40,7 @@ class _CreateGoalPostScreenState extends State<CreateGoalPostScreen> {
             .createPost(_postDescription, widget.goal);
         Provider.of<GoalProvider>(context, listen: false).setGoal(widget.goal);
         Navigator.of(context).pop(context);
-        successActionBar("Progress posted!").show(context);
+        successActionBar("Progress posted").show(context);
       } else {
         invalidFormBar("Description needs to be filled").show(context);
       }

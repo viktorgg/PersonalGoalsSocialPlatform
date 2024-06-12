@@ -48,7 +48,6 @@ class _GoalProgressPostTileState extends State<GoalProgressPostTile> {
   setAuthUser() async {
     AuthUser currentUser = await AuthUserServices.getUser();
     _authUser = currentUser;
-    setState(() {});
   }
 
   @override
@@ -77,7 +76,7 @@ class _GoalProgressPostTileState extends State<GoalProgressPostTile> {
                 SlidableAction(
                   onPressed: (BuildContext context) {
                     widget.postsProvider.deletePost(widget.post);
-                    successActionBar("Progress post deleted!").show(context);
+                    successActionBar("Progress post deleted").show(context);
                   },
                   backgroundColor: const Color(0xFFFE4A49),
                   foregroundColor: Colors.white,

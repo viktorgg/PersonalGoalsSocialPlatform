@@ -129,7 +129,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 (route) => false);
           } else {
             Flushbar(
-              title: "Registration failed!",
+              title: "Registration failed",
               message: response['message'].toString(),
               duration: const Duration(seconds: 10),
             ).show(context);
@@ -143,69 +143,68 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
         body: SingleChildScrollView(
             child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                decoration: const BoxDecoration(color: baseColor),
-                child: Expanded(
-                  child: Column(children: [
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    const Text(
-                      "Sign Up",
-                      style: TextStyle(color: Colors.white, fontSize: 25),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(30.0),
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20)),
-                      ),
-                      child: Form(
-                        key: formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            label("First Name"),
-                            const SizedBox(height: 10.0),
-                            firstNameField,
-                            const SizedBox(height: 15.0),
-                            label("Last Name"),
-                            const SizedBox(height: 10.0),
-                            lastNameField,
-                            const SizedBox(height: 15.0),
-                            label("Email"),
-                            const SizedBox(height: 5.0),
-                            emailField,
-                            const SizedBox(height: 15.0),
-                            label("Phone number (Optional)"),
-                            const SizedBox(height: 5.0),
-                            phoneField,
-                            const SizedBox(height: 15.0),
-                            label("Password"),
-                            const SizedBox(height: 10.0),
-                            passwordField,
-                            const SizedBox(height: 15.0),
-                            label("Confirm Password"),
-                            const SizedBox(height: 10.0),
-                            confirmPasswordField,
-                            const SizedBox(height: 20.0),
-                            auth.loggedInStatus == Status.authenticating
-                                ? loading
-                                : longButtons("Sign Up", signUp),
-                            signInLabel
-                          ],
-                        ),
-                      ),
-                    )
-                  ]),
-                ))));
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      decoration: const BoxDecoration(color: baseColor),
+      child: Column(children: [
+        const SizedBox(
+          height: 50,
+        ),
+        const Text(
+          "Sign Up",
+          style: TextStyle(color: Colors.white, fontSize: 25),
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        Expanded(
+            child: Container(
+          padding: const EdgeInsets.all(30.0),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+          ),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                label("First Name"),
+                const SizedBox(height: 10.0),
+                firstNameField,
+                const SizedBox(height: 15.0),
+                label("Last Name"),
+                const SizedBox(height: 10.0),
+                lastNameField,
+                const SizedBox(height: 15.0),
+                label("Email"),
+                const SizedBox(height: 5.0),
+                emailField,
+                const SizedBox(height: 15.0),
+                label("Phone number (Optional)"),
+                const SizedBox(height: 5.0),
+                phoneField,
+                const SizedBox(height: 15.0),
+                label("Password"),
+                const SizedBox(height: 10.0),
+                passwordField,
+                const SizedBox(height: 15.0),
+                label("Confirm Password"),
+                const SizedBox(height: 10.0),
+                confirmPasswordField,
+                const SizedBox(height: 20.0),
+                auth.loggedInStatus == Status.authenticating
+                    ? loading
+                    : longButtons("Sign Up", signUp),
+                signInLabel
+              ],
+            ),
+          ),
+        ))
+      ]),
+    )));
   }
 }

@@ -81,9 +81,21 @@ public class UserController {
         Optional<User> user = userRepository.findById(userId);
         Optional<Goal> goal = goalRepository.findById(goalId);
         if (user.isPresent() && goal.isPresent()) {
-            UserGoalRelations obj = new UserGoalRelations(user.get(), goal.get());
-            userGoalRelationsRepository.save(obj);
+            UserGoalRelations relation = new UserGoalRelations(user.get(), goal.get());
+            userGoalRelationsRepository.save(relation);
             return new ResponseEntity<>("User %s follows goal %s".formatted(userId, goalId), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("User or goal not found", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("{userId}/unfollowgoal/{goalId}")
+    public ResponseEntity<?> deleteUserGoalRel(@PathVariable Long userId, @PathVariable Long goalId) {
+        Optional<User> user = userRepository.findById(userId);
+        Optional<Goal> goal = goalRepository.findById(goalId);
+        if (user.isPresent() && goal.isPresent()) {
+            UserGoalRelations relation = userGoalRelationsRepository.findByUserIdAndGoalId(user.get().getId(), goal.get().getId());
+            userGoalRelationsRepository.delete(relation);
+            return new ResponseEntity<>("User %s unfollowed goal %s".formatted(userId, goalId), HttpStatus.OK);
         }
         return new ResponseEntity<>("User or goal not found", HttpStatus.BAD_REQUEST);
     }

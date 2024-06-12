@@ -21,7 +21,6 @@ class UserServices {
     int currentUserId = currentUser.userId;
     var url = Uri.parse('$usersURL/$currentUserId/rel');
     Response response = await get(url, headers: headers);
-    checkSessionExpired(response);
     Map responseBody = jsonDecode(response.body);
     List elements = responseBody['following'];
     List<User> following = [];
@@ -143,6 +142,21 @@ class UserServices {
     AuthUser currentUser = await AuthUserServices.getUser();
     int currentUserId = currentUser.userId;
     var url = Uri.parse('$usersURL/$currentUserId/followgoal/$goalId');
+    Response response = await post(url, headers: headers);
+
+    return response;
+  }
+
+  static Future<Response> unfollowGoal(int goalId) async {
+    var token = await AuthUserServices.getToken();
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+    };
+    headers.addAll(header);
+
+    AuthUser currentUser = await AuthUserServices.getUser();
+    int currentUserId = currentUser.userId;
+    var url = Uri.parse('$usersURL/$currentUserId/unfollowgoal/$goalId');
     Response response = await post(url, headers: headers);
 
     return response;

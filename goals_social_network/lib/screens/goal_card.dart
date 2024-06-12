@@ -1,7 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:goals_social_network/providers/goals_followed_provider.dart';
 import 'package:goals_social_network/services/goal_invite_services.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../models/goal.dart';
@@ -18,7 +18,7 @@ class GoalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    showPopupMenu(BuildContext context, TapDownDetails details) {
+    authUserPopupMenu(BuildContext context, TapDownDetails details) {
       showMenu<String>(
         color: baseColor,
         context: context,
@@ -50,22 +50,63 @@ class GoalCard extends StatelessWidget {
           goal.toggleStatus();
           goalsData?.updateGoal(goal);
           String msg = goal.done == true
-              ? "Goal marked as Done!"
-              : "Goal marked as In Progress!";
+              ? "Goal marked as Done"
+              : "Goal marked as In Progress";
           successActionBar(msg).show(context);
         } else if (value == "2") {
           goalsData?.deleteGoal(goal);
-          successActionBar("Goal deleted!").show(context);
+          successActionBar("Goal deleted").show(context);
         }
       });
     }
 
-    String generateRandomString(int len) {
-      var r = Random();
-      const chars =
-          'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-      return List.generate(len, (index) => chars[r.nextInt(chars.length)])
-          .join();
+    bool authUserFollowsGoal(Goal goal) {
+      return Provider.of<GoalsFollowedProvider>(context, listen: false)
+          .goalsFollowed
+          .any((el) => el.id == goal.id);
+    }
+
+    otherUserPopupMenu(BuildContext context, TapDownDetails details) {
+      showMenu<String>(
+        color: baseColor,
+        context: context,
+        position: RelativeRect.fromLTRB(
+            details.globalPosition.dx,
+            details.globalPosition.dy,
+            details.globalPosition.dx,
+            details.globalPosition.dy),
+        items: [
+          PopupMenuItem<String>(
+              padding: const EdgeInsets.all(4),
+              value: '1',
+              child: Center(
+                  child: Text(authUserFollowsGoal(goal) ? 'Unfollow' : 'Follow',
+                      style: const TextStyle(color: Colors.white)))),
+          if (ModalRoute.of(context)?.settings.name != '/friendgoals')
+            const PopupMenuItem<String>(
+                value: '2',
+                child: Center(
+                    child: Text('View all user goals',
+                        style: TextStyle(color: Colors.white)))),
+        ],
+        elevation: 8.0,
+      ).then((value) {
+        if (value == null) return;
+        if (value == "1") {
+          if (authUserFollowsGoal(goal)) {
+            Provider.of<GoalsFollowedProvider>(context, listen: false)
+                .unfollowGoal(goal);
+            successActionBar('Goal unfollowed').show(context);
+          } else {
+            Provider.of<GoalsFollowedProvider>(context, listen: false)
+                .followGoal(goal);
+            successActionBar('Goal followed').show(context);
+          }
+        } else if (value == "2") {
+          Navigator.pushReplacementNamed(context, '/friendgoals',
+              arguments: goal.userOwner);
+        }
+      });
     }
 
     return Card(
@@ -75,26 +116,27 @@ class GoalCard extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            leading: goal.status > -1
-                ? (goal.status == 0
-                    ? const Icon(
-                        Icons.trending_flat,
-                        color: Colors.grey,
-                        size: 40,
-                      )
-                    : const Icon(Icons.trending_up,
-                        color: Colors.green, size: 40))
-                : const Icon(Icons.trending_down, color: Colors.red, size: 40),
-            title:
-                Text('${goal.userOwner.firstName} ${goal.userOwner.lastName}'),
-            subtitle: Text(timeAgo(goal.updatedAt)),
-            trailing: ModalRoute.of(context)?.settings.name == '/mygoals'
-                ? GestureDetector(
-                    child: const Icon(Icons.more_vert),
-                    onTapDown: (details) => showPopupMenu(context, details),
-                  )
-                : const SizedBox.shrink(),
-          ),
+              leading: goal.status > -1
+                  ? (goal.status == 0
+                      ? const Icon(
+                          Icons.trending_flat,
+                          color: Colors.grey,
+                          size: 50,
+                        )
+                      : const Icon(Icons.trending_up,
+                          color: Colors.green, size: 50))
+                  : const Icon(Icons.trending_down,
+                      color: Colors.red, size: 50),
+              title: Text(
+                  '${goal.userOwner.firstName} ${goal.userOwner.lastName}'),
+              subtitle: Text(timeAgo(goal.updatedAt)),
+              trailing: GestureDetector(
+                child: const Icon(Icons.more_vert),
+                onTapDown: (details) =>
+                    ModalRoute.of(context)?.settings.name == '/mygoals'
+                        ? authUserPopupMenu(context, details)
+                        : otherUserPopupMenu(context, details),
+              )),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
@@ -151,8 +193,6 @@ class GoalCard extends StatelessWidget {
               ),
             ],
           ),
-          //Image.asset('assets/card-sample-image.jpg'),
-          //Image.asset('assets/card-sample-image-2.jpg'),
         ],
       ),
     );

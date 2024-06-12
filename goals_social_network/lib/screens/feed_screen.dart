@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:goals_social_network/providers/goals_followed_provider.dart';
 import 'package:goals_social_network/screens/common_app_bar.dart';
 import 'package:goals_social_network/screens/goal_card.dart';
 import 'package:goals_social_network/services/user_services.dart';
+import 'package:provider/provider.dart';
 
 import '../models/goal.dart';
 import '../models/user.dart';
@@ -19,6 +21,8 @@ class _FeedScreenState extends State<FeedScreen> {
 
   getGoals() async {
     _goalsFollowed = await UserServices.getGoalsFollowed();
+    Provider.of<GoalsFollowedProvider>(context, listen: false).goalsFollowed =
+        _goalsFollowed!;
     setState(() {});
   }
 
@@ -37,18 +41,23 @@ class _FeedScreenState extends State<FeedScreen> {
             ),
           )
         : CommonAppBar(
-            title: 'Feed',
+            title: 'Home',
             body: Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: ListView.builder(
-                    itemCount: _goalsFollowed?.length,
-                    itemBuilder: (context, index) {
-                      Goal? goal = _goalsFollowed?[index];
-                      return GoalCard(
-                        goal: goal!,
-                      );
-                    })),
+                child: Consumer<GoalsFollowedProvider>(
+                    builder: (context, goalsData, child) {
+                  return _goalsFollowed!.isEmpty
+                      ? const Center(child: Text('No goals followed :('))
+                      : ListView.builder(
+                          itemCount: _goalsFollowed?.length,
+                          itemBuilder: (context, index) {
+                            Goal? goal = _goalsFollowed?[index];
+                            return GoalCard(
+                              goal: goal!,
+                            );
+                          });
+                })),
             floatingActionButton: null,
           );
   }

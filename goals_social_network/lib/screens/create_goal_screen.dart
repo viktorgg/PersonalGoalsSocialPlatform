@@ -25,7 +25,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
         Provider.of<GoalsOwnedProvider>(context, listen: false)
             .createGoal(_goalTitle, _goalDescription);
         Navigator.pop(context);
-        successActionBar("Goal created!").show(context);
+        successActionBar("Goal created").show(context);
       } else {
         invalidFormBar("Title needs to be filled").show(context);
       }

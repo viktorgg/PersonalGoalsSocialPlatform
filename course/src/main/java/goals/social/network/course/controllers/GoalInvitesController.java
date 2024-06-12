@@ -2,7 +2,6 @@ package goals.social.network.course.controllers;
 
 import goals.social.network.course.models.Goal;
 import goals.social.network.course.models.GoalInviteCode;
-import goals.social.network.course.models.User;
 import goals.social.network.course.repositories.GoalInviteCodesRepository;
 import goals.social.network.course.repositories.GoalRepository;
 import lombok.RequiredArgsConstructor;
