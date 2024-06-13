@@ -160,27 +160,33 @@ class _GoalProgressPostTileState extends State<GoalProgressPostTile> {
                                       onPressed: () {
                                         showModalBottomSheet(
                                             isScrollControlled: true,
-                                            context: context,
-                                            builder: (context) {
-                                              return AnimatedPadding(
-                                                duration: const Duration(
-                                                    milliseconds: 150),
-                                                curve: Curves.easeOut,
-                                                padding: EdgeInsets.only(
-                                                    bottom:
-                                                        MediaQuery.of(context)
-                                                            .viewInsets
-                                                            .bottom),
-                                                child:
-                                                    CreateUpdatePostReviewScreen(
-                                                  goal: widget.goal,
-                                                  post: widget.post,
-                                                  oldReview: null,
-                                                  tileController:
-                                                      tileController,
-                                                ),
-                                              );
-                                            });
+                                            builder: (BuildContext context) {
+                                              return SingleChildScrollView(
+                                                  child: Container(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: MediaQuery.of(
+                                                                  context)
+                                                              .viewInsets
+                                                              .bottom),
+                                                      child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .fromLTRB(
+                                                                  20.0,
+                                                                  20.0,
+                                                                  20.0,
+                                                                  0.0),
+                                                          // content padding
+                                                          child:
+                                                              CreateUpdatePostReviewScreen(
+                                                            goal: widget.goal,
+                                                            post: widget.post,
+                                                            oldReview: null,
+                                                            tileController:
+                                                                tileController,
+                                                          ))));
+                                            },
+                                            context: context);
                                       },
                                       child: const Align(
                                         alignment: Alignment.center,

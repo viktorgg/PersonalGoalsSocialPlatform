@@ -90,14 +90,27 @@ class GoalDetailsScreenState extends State<GoalDetailsScreen> {
                                     '${goalData.goal!.userOwner.firstName} ${goalData.goal!.userOwner.lastName}'),
                                 subtitle:
                                     Text(timeAgo(goalData.goal!.updatedAt)),
-                                // trailing:
-                                // IconButton(
-                                //     alignment: Alignment.topRight,
-                                //     onPressed: () {
-                                //       Navigator.pushReplacementNamed(
-                                //           context, '/mygoals');
-                                //     },
-                                //     icon: const Icon(Icons.arrow_back)),
+                                trailing: widget.goal.userOwner.id ==
+                                        _authUser?.userId
+                                    ? TextButton(
+                                        style: TextButton.styleFrom(
+                                          padding:
+                                              const EdgeInsets.only(left: 0.0),
+                                        ),
+                                        onPressed: () {
+                                          String inviteCode =
+                                              generateRandomString(15);
+                                          Share.share(
+                                                  'Invitation to follow my goal in GoalsApp! Use the invite code:\n $inviteCode',
+                                                  subject:
+                                                      'Invitation to follow my goal in GoalsApp!')
+                                              .then((value) =>
+                                                  GoalInviteServices
+                                                      .createInvite(inviteCode,
+                                                          widget.goal));
+                                        },
+                                        child: const Text('Share'))
+                                    : const SizedBox.shrink(),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
@@ -118,31 +131,6 @@ class GoalDetailsScreenState extends State<GoalDetailsScreen> {
                                     color: Colors.black.withOpacity(0.7),
                                   ),
                                 ),
-                              ),
-                              ButtonBar(
-                                alignment: MainAxisAlignment.start,
-                                children: [
-                                  if (widget.goal.userOwner.id ==
-                                      _authUser?.userId)
-                                    TextButton(
-                                      style: TextButton.styleFrom(
-                                        padding:
-                                            const EdgeInsets.only(left: 0.0),
-                                      ),
-                                      onPressed: () {
-                                        String inviteCode =
-                                            generateRandomString(15);
-                                        Share.share(
-                                                'Invitation to follow my goal in GoalsApp! Use the invite code:\n $inviteCode',
-                                                subject:
-                                                    'Invitation to follow my goal in GoalsApp!')
-                                            .then((value) =>
-                                                GoalInviteServices.createInvite(
-                                                    inviteCode, widget.goal));
-                                      },
-                                      child: const Text('Share'),
-                                    ),
-                                ],
                               ),
                             ],
                           ),

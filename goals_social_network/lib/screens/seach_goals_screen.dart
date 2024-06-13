@@ -56,7 +56,7 @@ class _SearchGoalsScreenState extends State<SearchGoalsScreen> {
                       Row(children: [
                         SizedBox(
                           height: 45,
-                          width: 300,
+                          width: 260,
                           child: TextField(
                               onChanged: _handleSearch,
                               decoration: buildInputDecoration(

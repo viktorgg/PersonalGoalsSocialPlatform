@@ -21,7 +21,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final formKey = GlobalKey<FormState>();
 
   final passwordFieldController = TextEditingController();
-  late String _firstName, _lastName, _email, _password, _phone;
+  late String _firstName, _lastName, _email, _password;
+  String _phone = '';
 
   @override
   void dispose() {
@@ -167,25 +168,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 label("First Name"),
-                const SizedBox(height: 10.0),
+                const SizedBox(height: 5.0),
                 firstNameField,
                 const SizedBox(height: 15.0),
                 label("Last Name"),
-                const SizedBox(height: 10.0),
+                const SizedBox(height: 5.0),
                 lastNameField,
                 const SizedBox(height: 15.0),
                 label("Email"),
                 const SizedBox(height: 5.0),
                 emailField,
-                const SizedBox(height: 15.0),
-                label("Phone number (Optional)"),
+                const SizedBox(height: 10.0),
+                // label("Phone number (Optional)"),
+                // const SizedBox(height: 5.0),
+                // phoneField,
                 const SizedBox(height: 5.0),
-                phoneField,
-                const SizedBox(height: 15.0),
                 label("Password"),
                 const SizedBox(height: 10.0),
                 passwordField,
-                const SizedBox(height: 15.0),
+                const SizedBox(height: 10.0),
                 label("Confirm Password"),
                 const SizedBox(height: 10.0),
                 confirmPasswordField,
