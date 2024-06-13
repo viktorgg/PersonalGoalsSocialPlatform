@@ -48,12 +48,12 @@ class _GoalProgressPostTileState extends State<GoalProgressPostTile> {
   setAuthUser() async {
     AuthUser currentUser = await AuthUserServices.getUser();
     _authUser = currentUser;
+    setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    getReviews();
     setAuthUser();
   }
 
@@ -63,7 +63,18 @@ class _GoalProgressPostTileState extends State<GoalProgressPostTile> {
       return _reviews!.any((el) => el.userOwner.id == _authUser!.userId);
     }
 
-    return _authUser == null || _reviews == null
+    int getGoalPostReviewsCount() {
+      List<GoalPost> posts =
+          Provider.of<GoalProvider>(context, listen: false).goal!.progressPosts;
+      for (GoalPost post in posts) {
+        if (post.id == widget.post.id) {
+          return post.reviews.length;
+        }
+      }
+      return 0;
+    }
+
+    return _authUser == null
         ? const Center(
             child: CircularProgressIndicator(),
           )
@@ -108,12 +119,7 @@ class _GoalProgressPostTileState extends State<GoalProgressPostTile> {
                     trailing: Wrap(
                       children: [
                         Text(
-                          Provider.of<GoalProvider>(context, listen: false)
-                                  .goal!
-                                  .progressPosts
-                                  .isEmpty
-                              ? '0  '
-                              : '${Provider.of<GoalProvider>(context, listen: false).goal!.progressPosts.firstWhere((e) => e.id == widget.post.id).reviews.length}  ',
+                          '${getGoalPostReviewsCount()}  ',
                           style: const TextStyle(fontSize: 15),
                         ),
                         const Icon(Icons.feedback_outlined),
@@ -127,51 +133,61 @@ class _GoalProgressPostTileState extends State<GoalProgressPostTile> {
                       }
                     },
                     children: [
-                      GoalPostReviewTiles(
-                        goal: widget.goal,
-                        reviews: _reviews!,
-                        authUserReviewed: authUserReviewedPost(),
-                        post: widget.post,
-                        tileController: tileController,
-                      ),
-                      widget.goal.userOwner.id == _authUser!.userId ||
-                              authUserReviewedPost()
-                          ? const SizedBox.shrink()
-                          : ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shadowColor: baseColor,
-                                elevation: 3,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(32.0)),
-                                minimumSize: const Size(100, 40),
+                      _reviews == null
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : Column(children: [
+                              GoalPostReviewTiles(
+                                goal: widget.goal,
+                                reviews: _reviews!,
+                                authUserReviewed: authUserReviewedPost(),
+                                post: widget.post,
+                                tileController: tileController,
                               ),
-                              onPressed: () {
-                                showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    context: context,
-                                    builder: (context) {
-                                      return AnimatedPadding(
-                                        duration:
-                                            const Duration(milliseconds: 150),
-                                        curve: Curves.easeOut,
-                                        padding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom),
-                                        child: CreateUpdatePostReviewScreen(
-                                          goal: widget.goal,
-                                          post: widget.post,
-                                          oldReview: null,
-                                          tileController: tileController,
-                                        ),
-                                      );
-                                    });
-                              },
-                              child: const Align(
-                                alignment: Alignment.center,
-                                child: Text("Review Progress Update"),
-                              ),
-                            ),
+                              widget.goal.userOwner.id == _authUser!.userId ||
+                                      authUserReviewedPost()
+                                  ? const SizedBox.shrink()
+                                  : ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shadowColor: baseColor,
+                                        elevation: 3,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(32.0)),
+                                        minimumSize: const Size(100, 40),
+                                      ),
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            context: context,
+                                            builder: (context) {
+                                              return AnimatedPadding(
+                                                duration: const Duration(
+                                                    milliseconds: 150),
+                                                curve: Curves.easeOut,
+                                                padding: EdgeInsets.only(
+                                                    bottom:
+                                                        MediaQuery.of(context)
+                                                            .viewInsets
+                                                            .bottom),
+                                                child:
+                                                    CreateUpdatePostReviewScreen(
+                                                  goal: widget.goal,
+                                                  post: widget.post,
+                                                  oldReview: null,
+                                                  tileController:
+                                                      tileController,
+                                                ),
+                                              );
+                                            });
+                                      },
+                                      child: const Align(
+                                        alignment: Alignment.center,
+                                        child: Text("Review Progress Update"),
+                                      ),
+                                    ),
+                            ])
                     ])));
   }
 }

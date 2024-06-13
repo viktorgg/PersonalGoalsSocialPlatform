@@ -1,9 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
-const String baseURL = "http://192.168.100.60:8080";
+const String baseURL = "https://goals-app-springboot-e0223baa254e.herokuapp.com";
 const Map<String, String> header = {"Content-Type": "application/json"};
 
 const String goalsURL = '$baseURL/goals';

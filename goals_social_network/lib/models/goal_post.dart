@@ -31,10 +31,4 @@ class GoalPost {
     }
     return goalPosts;
   }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'description': description,
-    };
-  }
 }
