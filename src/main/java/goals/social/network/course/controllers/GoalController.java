@@ -32,7 +32,7 @@ public class GoalController {
         boolean exists = goalRepository.existsById(id);
         if (exists) {
             Goal goal = goalRepository.getReferenceById(id);
-            return new ResponseEntity<>(goalService.calculateGoalStatuses(List.of(goal)).getFirst(), HttpStatus.OK);
+            return new ResponseEntity<>(goalService.calculateGoalStatuses(List.of(goal)).get(0), HttpStatus.OK);
         }
         return new ResponseEntity<>("Goal with ID %s is not found".formatted(id), HttpStatus.BAD_REQUEST);
     }
