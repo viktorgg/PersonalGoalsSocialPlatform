@@ -1,4 +1,3 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:goals_social_network/screens/invite_code_screen.dart';
@@ -122,21 +121,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
           if (response.containsKey("data")) {
             AuthUser user = response['data'];
             Provider.of<UserProvider>(context, listen: false).setUser(user);
-            Navigator.pushAndRemoveUntil(
+            Navigator.pushReplacement(
                 context,
                 CupertinoPageRoute(
-                    builder: (context) => const InviteCodeScreen()),
-                (route) => false);
+                    builder: (context) => const InviteCodeScreen()));
           } else {
-            Flushbar(
-              title: "Registration failed",
-              message: response['message'].toString(),
-              duration: const Duration(seconds: 10),
-            ).show(context);
+            errorFlushBar(response['message']).show(context);
           }
         });
       } else {
-        invalidFormBar("Please complete the form properly").show(context);
+        errorFlushBar("Please complete the form properly").show(context);
       }
     }
 

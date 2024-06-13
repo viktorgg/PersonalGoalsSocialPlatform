@@ -42,7 +42,7 @@ class _CreateGoalPostScreenState extends State<CreateGoalPostScreen> {
         Navigator.of(context).pop(context);
         successActionBar("Progress posted").show(context);
       } else {
-        invalidFormBar("Description needs to be filled").show(context);
+        errorFlushBar("Description needs to be filled").show(context);
       }
     }
 

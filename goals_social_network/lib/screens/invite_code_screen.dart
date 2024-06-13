@@ -33,11 +33,11 @@ class _InviteCodeScreenState extends State<InviteCodeScreen> {
                 (value) => Navigator.pushReplacementNamed(context, '/feed'));
             successActionBar('Invitation code used successfully').show(context);
           } else {
-            invalidFormBar("Invitation code not valid").show(context);
+            errorFlushBar("Invitation code not valid").show(context);
           }
         });
       } else {
-        invalidFormBar("Please complete the form properly").show(context);
+        errorFlushBar("Please complete the form properly").show(context);
       }
     }
 

@@ -51,11 +51,10 @@ class _CommonAppBarState extends State<CommonAppBar> {
                 icon: const Icon(Icons.add_card),
                 tooltip: 'Use invitation code',
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
+                  Navigator.pushReplacement(
                       context,
                       CupertinoPageRoute(
-                          builder: (context) => const InviteCodeScreen()),
-                      (route) => false);
+                          builder: (context) => const InviteCodeScreen()));
                 },
               ),
             ),
@@ -84,11 +83,10 @@ class _CommonAppBarState extends State<CommonAppBar> {
                 icon: const Icon(Icons.search),
                 tooltip: 'Search for users',
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
+                  Navigator.pushReplacement(
                       context,
                       CupertinoPageRoute(
-                          builder: (context) => const SearchGoalsScreen()),
-                      (route) => false);
+                          builder: (context) => const SearchGoalsScreen()));
                 },
               ),
             Builder(

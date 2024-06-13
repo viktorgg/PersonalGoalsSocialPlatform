@@ -15,7 +15,6 @@ import 'package:goals_social_network/services/auth_user_services.dart';
 import 'package:goals_social_network/services/globals.dart';
 import 'package:provider/provider.dart';
 
-import 'models/auth_user.dart';
 import 'models/goal.dart';
 import 'models/user.dart';
 
@@ -29,7 +28,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    Future<AuthUser> getUserData() => AuthUserServices.getUser();
+    Future<String?> getUserData() async {
+      String? token = await AuthUserServices.getToken();
+      return token;
+    }
 
     return MultiProvider(
       providers: [
@@ -57,12 +59,11 @@ class MyApp extends StatelessWidget {
                   default:
                     if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
-                    } else if (snapshot.data?.token == null) {
+                    } else if (snapshot.data == null) {
                       return const SignInScreen();
                     } else {
-                      AuthUserServices.removeUser();
+                      return const FeedScreen();
                     }
-                    return const SignInScreen();
                 }
               }),
           routes: {

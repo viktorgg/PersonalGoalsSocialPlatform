@@ -1,6 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:goals_social_network/models/goal_post_review.dart';
 
 import 'globals.dart';
 
@@ -47,9 +46,9 @@ Flushbar successActionBar(String message) {
   );
 }
 
-Flushbar invalidFormBar(String message) {
+Flushbar errorFlushBar(String message) {
   return Flushbar(
-    title: "Invalid Form",
+    title: "Error",
     message: message,
     isDismissible: true,
     duration: const Duration(seconds: 3),

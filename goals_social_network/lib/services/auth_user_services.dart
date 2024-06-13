@@ -1,11 +1,8 @@
-
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/auth_user.dart';
 
 class AuthUserServices {
-
   static Future<void> saveUser(AuthUser user) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -14,8 +11,6 @@ class AuthUserServices {
     prefs.setString("lastName", user.lastName);
     prefs.setString("email", user.email);
     prefs.setString("token", user.token);
-
-    print(prefs.getString("token"));
   }
 
   static Future<AuthUser> getUser() async {
@@ -27,7 +22,11 @@ class AuthUserServices {
     String? email = prefs.getString("email");
     String? token = prefs.getString("token");
 
-    if (userId == null || firstName == null || lastName == null || email == null || token == null) {
+    if (userId == null ||
+        firstName == null ||
+        lastName == null ||
+        email == null ||
+        token == null) {
       return AuthUser(
         userId: 0,
         firstName: '',
@@ -37,15 +36,15 @@ class AuthUserServices {
       );
     }
     return AuthUser(
-        userId: userId,
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        token: token,
+      userId: userId,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      token: token,
     );
   }
 
-  static void removeUser() async {
+  static Future<void> removeUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     prefs.remove("userId");

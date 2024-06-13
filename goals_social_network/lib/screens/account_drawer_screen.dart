@@ -75,8 +75,8 @@ class _AccountDrawerScreenState extends State<AccountDrawerScreen> {
                 ),
                 IconButton(
                   onPressed: () {
-                    AuthUserServices.removeUser();
-                    Navigator.pushReplacementNamed(context, '/signin');
+                    AuthUserServices.removeUser().then((value) =>
+                        Navigator.pushReplacementNamed(context, '/signin'));
                   },
                   icon: const Icon(Icons.logout),
                 ),

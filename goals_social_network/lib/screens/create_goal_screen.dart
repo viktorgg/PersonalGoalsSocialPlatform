@@ -27,7 +27,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
         Navigator.pop(context);
         successActionBar("Goal created").show(context);
       } else {
-        invalidFormBar("Title needs to be filled").show(context);
+        errorFlushBar("Title needs to be filled").show(context);
       }
     }
 

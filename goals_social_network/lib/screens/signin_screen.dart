@@ -1,4 +1,3 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -81,15 +80,11 @@ class _SignInScreenState extends State<SignInScreen> {
             Provider.of<UserProvider>(context, listen: false).setUser(user);
             Navigator.pushReplacementNamed(context, '/feed');
           } else {
-            Flushbar(
-              title: "Sign in failed!",
-              message: response['message'].toString(),
-              duration: const Duration(seconds: 3),
-            ).show(context);
+            errorFlushBar(response['message']).show(context);
           }
         });
       } else {
-        invalidFormBar("Please complete the form properly").show(context);
+        errorFlushBar("Please complete the form properly").show(context);
       }
     }
 
