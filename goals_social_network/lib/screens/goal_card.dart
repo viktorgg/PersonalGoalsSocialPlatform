@@ -129,7 +129,11 @@ class GoalCard extends StatelessWidget {
                       color: Colors.red, size: 50),
               title: Text(
                   '${goal.userOwner.firstName} ${goal.userOwner.lastName}'),
-              subtitle: Text(timeAgo(goal.updatedAt)),
+              subtitle: Text(
+                  timeAgo(goal.updatedAt),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+              ),
               trailing: GestureDetector(
                 child: const Icon(Icons.more_vert),
                 onTapDown: (details) =>
