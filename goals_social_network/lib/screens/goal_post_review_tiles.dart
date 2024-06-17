@@ -69,15 +69,12 @@ class _GoalPostReviewTilesState extends State<GoalPostReviewTiles> {
         : ListView.builder(
             physics: const ScrollPhysics(),
             shrinkWrap: true,
-            padding: const EdgeInsets.all(0.0),
             itemCount: widget.reviews.length,
             itemBuilder: (context, i) {
               return Column(children: [
                 ListTile(
-                  leading: const CircleAvatar(
-                    backgroundColor: Colors.grey,
-                    //backgroundImage: new NetworkImage(friendsModel.profileImageUrl),
-                  ),
+                  leading:  const Icon(Icons.person_outline,
+                  color: baseColor, size: 40,),
                   title: Column(children: [
                     widget.reviews[i].approved
                         ? Align(
